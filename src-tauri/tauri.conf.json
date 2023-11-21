@@ -32,14 +32,24 @@
     "security": {
       "csp": null
     },
+    "macOSPrivateApi": true,
     "windows": [
       {
         "fullscreen": false,
-        "resizable": true,
-        "title": "ueli-tauri",
-        "width": 800,
-        "height": 600
+        "resizable": false,
+        "title": "menubar xxxx",
+        "width": 700,
+        "height": 600,
+        "visible": false,
+        "hiddenTitle": true,
+        "decorations": false,
+        "focus": false,
+        "transparent": true
       }
-    ]
+    ],
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    }    
   }
 }
