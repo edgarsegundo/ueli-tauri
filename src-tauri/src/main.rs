@@ -4,6 +4,12 @@
 use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::{Position, WindowExt};
 
+// the payload type must implement `Serialize` and `Clone`.
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+  message: String,
+}
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 // #[tauri::command]
 // fn greet(name: &str) -> String {
@@ -91,8 +97,27 @@ fn main() {
             }
             _ => {}
         })
+        .setup(|app| {
+            // #[cfg(debug_assertions)] // only include this code on debug builds
+            // {
+            //   let window = app.get_window("main").unwrap();
+            //   window.open_devtools();
+            // //   window.close_devtools();
+            // }
+        
+            // listen to the `event-name` (emitted on any window)
+            // let id = app.listen_global("event-name", |event| {
+            app.listen_global("event-name", |event| {
+              println!("got event-name with payload {:?}", event.payload());
+            });
+            // unlisten to the event using the `id` returned on the `listen_global` function
+            // a `once_global` API is also exposed on the `App` struct
+            // app.unlisten(id);
+      
+            // emit the `event-name` event to all webview windows on the frontend
+            app.emit_all("event-name", Payload { message: "Tauri is awesome!".into() }).unwrap();
+            Ok(())
+          })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-
-
