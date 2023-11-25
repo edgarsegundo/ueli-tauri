@@ -137,8 +137,8 @@ fn main() {
         
             // listen to the `event-name` (emitted on any window)
             // let id = app.listen_global("event-name", |event| {
-            app.listen_global("event-name", |event| {
-              println!("got event-name with payload {:?}", event.payload());
+            app.listen_global(&channels::get_channel("error_occurred"), |event| {
+              println!("{:?}", event.payload());
             });
             // unlisten to the event using the `id` returned on the `listen_global` function
             // a `once_global` API is also exposed on the `App` struct

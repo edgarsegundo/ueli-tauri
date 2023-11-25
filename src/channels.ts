@@ -20,15 +20,25 @@ class Channels {
         return value;
     }
 
-    public async fetchJsonData(): Promise<void> {
-        fetch('../channels.json')
-            .then(response => response.json())
-            .then(data => {
-                this.channels = data;
-        })
-        .catch(error => {
-          console.error('Error fetching JSON file:', error);
-        });
+    public fetchJsonData(): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+          fetch('../channels.json')
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  this.channels = data;
+                  resolve();
+              })
+              .catch(error => {
+                  let error_str:string = `❌ 'Error fetching or processing JSON file: ${error}`
+                  console.error(error_str);
+                  reject(error_str);
+              });
+      });
     }
   }
   
