@@ -1,8 +1,14 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+// use serde_json::json;
 use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::{Position, WindowExt};
+
+
+mod channels;
+
+
 
 // the payload type must implement `Serialize` and `Clone`.
 #[derive(Clone, serde::Serialize)]
@@ -16,13 +22,16 @@ struct Payload {
 //     format!("Hello, {}! You've been greeted from Rust!", name)
 // }
 
+
 fn main() {
     let show = CustomMenuItem::new("show".to_string(), "Show").accelerator("option+space");
+    let config = CustomMenuItem::new("config".to_string(), "Config");
     let quit = CustomMenuItem::new("quit".to_string(), "Quit").accelerator("Cmd+Q");
     let hide = CustomMenuItem::new("hide".to_string(), "Hide").accelerator("Cmd+H");
 
     let system_tray_menu = SystemTrayMenu::new()
         .add_item(show)
+        .add_item(config)
         .add_item(hide)
         .add_item(quit);
 
@@ -75,7 +84,28 @@ fn main() {
                             window.show().unwrap();
                             window.set_focus().unwrap();
                         }
+
+                        // println!("-> Channel {:?} ", &channels::get_channel("promptApp"));
+
+                        // window and app have the emit method, both work, but app is global and window is specific, however,
+                        // I'm still learning one or the other, so I'm leaving both here for now
+                        window.emit(&channels::get_channel("tray_menu_item_selected"), Payload { message: "show".into() }).unwrap();                        
+                        // app.emit_all("event-name", Payload { message: "show".into() }).unwrap();
                     }
+                    "config" => {
+                        let window: tauri::Window = app.get_window("main").unwrap();
+                        // use TrayCenter as initial window position
+                        let _ = window.move_window(Position::TrayCenter);
+                        if window.is_visible().unwrap() {
+                            window.hide().unwrap();
+                        } else {
+                            window.show().unwrap();
+                            window.set_focus().unwrap();
+                        }
+
+                        window.emit(&channels::get_channel("tray_menu_item_selected"), Payload { message: "config".into() }).unwrap();                        
+                    }
+
                     "quit" => {
                         std::process::exit(0);
                     }
@@ -114,8 +144,8 @@ fn main() {
             // a `once_global` API is also exposed on the `App` struct
             // app.unlisten(id);
       
-            // emit the `event-name` event to all webview windows on the frontend
-            app.emit_all("event-name", Payload { message: "Tauri is awesome!".into() }).unwrap();
+            // // emit the `event-name` event to all webview windows on the frontend
+            // app.emit_all("event-name", Payload { message: "Tauri is awesome!".into() }).unwrap();
             Ok(())
           })
         .run(tauri::generate_context!())
