@@ -26,6 +26,15 @@ RUST_BACKTRACE=1 pnpm tauri build --debug
 
 4. Where did I last leave off?
 
+I'm trying this: https://docs.rs/config/latest/config/
+                 https://chat.openai.com/c/8861df89-2a6f-4c83-ad9b-9e9d88efbac5
+
+(I gave up this) I'm trying to do something simple: https://chat.openai.com/c/02475064-c26e-43ec-b903-4bde7e5399b0
+
+I'm trying to implement this (I will give up on this)
+https://github.com/prazdevs/pinia-plugin-persistedstate
+
+
 I was trying to setup debug on the rust side, I followed all the steps on this [page](https://tauri.app/v1/guides/debugging/vs-code) but it is giving me the following error when I click debug f5:
 
 <!-- Running `cargo build --manifest-path=./src-tauri/Cargo.toml --no-default-features --message-format=json`...
@@ -46,10 +55,6 @@ I found this [thread](https://github.com/rust-lang/vscode-rust/issues/708), it s
 
 https://tauri.app/v1/guides/debugging/vs-code
 
-I stopped here too, I'm trying to create an event handler communication betweeen frontend and backend
-https://tauri.app/v1/guides/features/events/
-
-This link is the official guide explaing on how to build a system-tray menu, I might want to take a look and see if there is something else I need [here](https://tauri.app/v1/guides/features/system-tray/)
 
 ## Backlog
 

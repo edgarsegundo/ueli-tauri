@@ -6,9 +6,10 @@ use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu
 use tauri_plugin_positioner::{Position, WindowExt};
 
 
+// mod data_store;
+// use data_store::{SharedData};
+
 mod channels;
-
-
 
 // the payload type must implement `Serialize` and `Clone`.
 #[derive(Clone, serde::Serialize)]

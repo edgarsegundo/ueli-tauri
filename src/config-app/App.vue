@@ -33,9 +33,9 @@
         {{ notification.message }}
     </div>
     <div class="settings__setting">
-        <p>config-app</p>
-        <!-- <general-settings :config="config" :translations="translations"></general-settings>
-        <appearance-settings :config="config" :translations="translations"></appearance-settings>
+        <general-settings></general-settings>
+        <!-- <general-settings :config="config" :translations="translations"></general-settings> -->
+        <!-- <appearance-settings :config="config" :translations="translations"></appearance-settings>
         <color-theme-settings :config="config" :translations="translations"></color-theme-settings>
         <search-engine-settings :config="config" :translations="translations"></search-engine-settings>
         <application-search-settings :config="config" :translations="translations"></application-search-settings>
@@ -82,6 +82,7 @@ import { SettingOsSpecific } from "./settings-os-specific";
 // import { platform } from "os";
 import { GeneralSettings } from "./general-settings";
 
+
 const autoHideErrorMessageDelayInMilliseconds = 5000;
 let autoHideErrorMessageTimeout: number;
 
@@ -89,6 +90,9 @@ export default defineComponent({
   name: 'Config',
 
   setup() {
+
+
+
     const generalSettingMenuItems = ref<string[]>(Object.values(GeneralSettings).sort());
     const notification = ref({
       message: '',
