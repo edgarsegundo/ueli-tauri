@@ -83,14 +83,73 @@ import { SettingOsSpecific } from "./settings-os-specific";
 import { GeneralSettings } from "./general-settings";
 
 
+
+import { Store } from "tauri-plugin-store-api";
+import { emit } from '@tauri-apps/api/event'
+import Channels from '../channels';
+
+
 const autoHideErrorMessageDelayInMilliseconds = 5000;
 let autoHideErrorMessageTimeout: number;
+
+// Assuming the data structure is something like this
+interface StoreData {
+  value: number;
+  // other properties if there are more
+}
 
 export default defineComponent({
   name: 'Config',
 
   setup() {
 
+
+
+    // const store = new Store(".settings.dat");
+
+    // await store.set("some-key", { value: 5 });
+
+    // const val = await store.get("some-key");
+    // // assert(val, { value: 5 });
+
+    // store.save(); // this manually saves the store, otherwise the store is only saved when your app is closed
+
+
+    const store = new Store(".settings.dat");
+
+    const asyncFunction = async () => {
+      await store.set("some-key", { value: 13 });
+      const val = await store.get("some-key");
+      console.log(val);
+      // Do something with the value
+      store.save();
+    };
+
+    // Call the asynchronous function
+    asyncFunction();
+
+    const asyncFunctionGet = async () => {
+      // const val:StoreData = await store.get("some-key");
+
+      const val: StoreData | null = await store.get("some-key");
+
+      console.log(val);
+
+      let value = val ? val["value"] : 0;
+      
+
+      emit(Channels.getInstance().get("console_log_message"), {
+          theMessage:  `🦄 (3) store some-key: (${value})`,
+      })
+
+
+    };
+
+    asyncFunctionGet();
+
+    // emit('console_log_message', {
+    //   theMessage:  `🦄 (4)`,
+    // })    
 
 
     const generalSettingMenuItems = ref<string[]>(Object.values(GeneralSettings).sort());

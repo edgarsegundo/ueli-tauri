@@ -1,4 +1,5 @@
 {
     "tray_menu_item_selected": "tray_menu_item_selected",
-    "error_occurred": "error_occurred"
+    "error_occurred": "error_occurred",
+    "console_log_message": "console_log_message"
 }

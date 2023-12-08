@@ -26,35 +26,46 @@ RUST_BACKTRACE=1 pnpm tauri build --debug
 
 4. Where did I last leave off?
 
-I'm trying this: https://docs.rs/config/latest/config/
-                 https://chat.openai.com/c/8861df89-2a6f-4c83-ad9b-9e9d88efbac5
 
-(I gave up this) I'm trying to do something simple: https://chat.openai.com/c/02475064-c26e-43ec-b903-4bde7e5399b0
+I will try this: https://aptabase.com/blog/persistent-state-tauri-apps
 
-I'm trying to implement this (I will give up on this)
-https://github.com/prazdevs/pinia-plugin-persistedstate
+https://github.com/tauri-apps/tauri-plugin-store
 
 
-I was trying to setup debug on the rust side, I followed all the steps on this [page](https://tauri.app/v1/guides/debugging/vs-code) but it is giving me the following error when I click debug f5:
+```ts
+import { Store } from "tauri-plugin-store-api";
+import { emit } from '@tauri-apps/api/event'
+import Channels from '../channels';
 
-<!-- Running `cargo build --manifest-path=./src-tauri/Cargo.toml --no-default-features --message-format=json`...
-Error: Cargo invocation failed.
-    at t.Cargo.getCargoArtifacts (/Users/edrezende/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/extension.js:1:14943)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at Object.open (/Users/edrezende/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/extension.js:1:13253)
-Caused by: Error: spawn cargo ENOENT
-    at Process.ChildProcess._handle.onexit (node:internal/child_process:283:19)
-    at onErrorNT (node:internal/child_process:476:16)
-    at processTicksAndRejections (node:internal/process/task_queues:82:21)
- *  The terminal process failed to launch (exit code: 1). 
- *  Terminal will be reused by tasks, press any key to close it.  -->
+// Assuming the data structure is something like this
+interface StoreData {
+  value: number;
+  // other properties if there are more
+}
 
-I found this [thread](https://github.com/rust-lang/vscode-rust/issues/708), it seems that this is a package version conflict
+export default defineComponent({
+    setup() {
+        const store = new Store(".settings.dat");
 
+        const asyncFunction = async () => {
+            await store.set("some-key", { value: 13 });
+            const val = await store.get("some-key");
+            console.log(val);
+            store.save();
+        };
+        asyncFunction();
 
-
-https://tauri.app/v1/guides/debugging/vs-code
-
+        const asyncFunctionGet = async () => {
+        const val: StoreData | null = await store.get("some-key");
+        let value = val ? val["value"] : 0;
+        emit(Channels.getInstance().get("console_log_message"), {
+            theMessage:  `🦄 (3) store some-key: (${value})`,
+        })
+        };
+        asyncFunctionGet();
+    }
+})
+```
 
 ## Backlog
 
@@ -128,3 +139,33 @@ RUST_BACKTRACE=1 pnpm tauri dev
 
 
 [pnpm tauri build --debug](https://tauri.app/v1/guides/debugging/application)
+
+
+
+(I gave up this) I'm trying to do something simple: https://chat.openai.com/c/02475064-c26e-43ec-b903-4bde7e5399b0
+
+I'm trying to implement this (I will give up on this)
+https://github.com/prazdevs/pinia-plugin-persistedstate
+
+
+I was trying to setup debug on the rust side, I followed all the steps on this [page](https://tauri.app/v1/guides/debugging/vs-code) but it is giving me the following error when I click debug f5:
+
+<!-- Running `cargo build --manifest-path=./src-tauri/Cargo.toml --no-default-features --message-format=json`...
+Error: Cargo invocation failed.
+    at t.Cargo.getCargoArtifacts (/Users/edrezende/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/extension.js:1:14943)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.open (/Users/edrezende/.vscode/extensions/vadimcn.vscode-lldb-1.10.0/extension.js:1:13253)
+Caused by: Error: spawn cargo ENOENT
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:283:19)
+    at onErrorNT (node:internal/child_process:476:16)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+ *  The terminal process failed to launch (exit code: 1). 
+ *  Terminal will be reused by tasks, press any key to close it.  -->
+
+I found this [thread](https://github.com/rust-lang/vscode-rust/issues/708), it seems that this is a package version conflict
+
+https://tauri.app/v1/guides/debugging/vs-code
+
+I'm trying this: https://docs.rs/config/latest/config/
+                 https://chat.openai.com/c/8861df89-2a6f-4c83-ad9b-9e9d88efbac5
+

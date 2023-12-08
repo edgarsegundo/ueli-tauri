@@ -1,9 +1,14 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use serde_json::json;
 // use serde_json::json;
 use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::{Position, WindowExt};
+use tauri_plugin_store::StoreBuilder;
+
+
+// use tauri_plugin_store::PluginBuilder;
 
 
 // mod data_store;
@@ -24,6 +29,8 @@ struct Payload {
 // }
 
 
+
+
 fn main() {
     let show = CustomMenuItem::new("show".to_string(), "Show").accelerator("option+space");
     let config = CustomMenuItem::new("config".to_string(), "Config");
@@ -38,6 +45,7 @@ fn main() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .system_tray(SystemTray::new().with_menu(system_tray_menu))
         .on_system_tray_event(|app, event| {
             tauri_plugin_positioner::on_tray_event(app, &event);
@@ -129,6 +137,13 @@ fn main() {
             _ => {}
         })
         .setup(|app| {
+        
+        
+            let mut store = StoreBuilder::new(app.handle(), "store.bin".parse()?).build();
+
+            let _ = store.insert("a".to_string(), json!("b")); // note that values must be serd_json::Value to be compatible with JS
+        
+            println!("-> Store {:?}", store.get("a").unwrap());
             // #[cfg(debug_assertions)] // only include this code on debug builds
             // {
             //   let window = app.get_window("main").unwrap();
@@ -141,6 +156,11 @@ fn main() {
             app.listen_global(&channels::get_channel("error_occurred"), |event| {
               println!("{:?}", event.payload());
             });
+
+            app.listen_global(&channels::get_channel("console_log_message"), |event| {
+                println!("{:?}", event.payload());
+              });
+  
             // unlisten to the event using the `id` returned on the `listen_global` function
             // a `once_global` API is also exposed on the `App` struct
             // app.unlisten(id);
