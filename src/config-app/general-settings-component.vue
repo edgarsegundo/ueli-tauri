@@ -1,6 +1,6 @@
 <template>
 
-
+<h1>Edgar Rezende de Paula Segundo</h1>
 </template>
 
 <script lang="ts">
@@ -32,10 +32,14 @@
 // import { deepCopy } from "../../common/helpers/object-helpers";
 // import { OperatingSystem } from "../../common/operating-system";
 
+import { Store } from "tauri-plugin-store-api";
+import { emit } from '@tauri-apps/api/event'
+import Channels from '../channels';
 
 
 import { defineComponent, // ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
 } from 'vue';
+import { UserConfigOptions } from "../common/config/user-config-options";
 
 // Import your types, constants, and helper functions
 
@@ -67,10 +71,47 @@ import { defineComponent, // ref, computed, onMounted, onUnmounted, defineProps,
 //     v8: "1.0.0" // process.versions.v8,
 // };
 
+// const initialConfig = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions))
+
 export default defineComponent({
-    name: 'General-Settings',
+    name: 'general-settings',
 
     setup() {
+
+        emit(Channels.getInstance().get("console_log_message"), {
+            theMessage: `🦄 (-22)`,
+        })
+
+
+        const asyncFunctionGet = async () => {
+
+            emit(Channels.getInstance().get("console_log_message"), {
+                theMessage:  `🦄 (5)`,
+            })
+
+            const store = new Store(".settings.dat");
+            const appearanceOptions:UserConfigOptions | null = await store.get("appearanceOptions");
+
+            // const val: UserConfigOptions | null = await store.get("some-key");
+
+            // let value = val ? val["value"] : 0;
+            
+
+            emit(Channels.getInstance().get("console_log_message"), {
+                theMessage: `🦄 appearanceOptions: (${appearanceOptions})`,
+            })
+
+            // emit(Channels.getInstance().get("console_log_message"), {
+            //     theMessage:  `🦄 (99)`,
+            // })
+
+
+        };
+
+        asyncFunctionGet();
+
+
+
         // Define your methods
         const clearExecutionLog = () => {
             // const translations: TranslationSet = this.translations;

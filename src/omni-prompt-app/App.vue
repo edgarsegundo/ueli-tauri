@@ -48,6 +48,7 @@ import { ref, computed } from "vue";
 
 
 import { emit } from '@tauri-apps/api/event'
+import Channels from '../channels';
 
 
 export default {
@@ -66,15 +67,11 @@ export default {
 
     const name = ref('Edgar')
 
-
-
-    
-
     document.onkeydown = (event: KeyboardEvent) => {
 
-      emit('event-name', {
-        theMessage: '🦄 (2) Key pressed!',
-      })
+        emit(Channels.getInstance().get("console_log_message"), {
+            theMessage: `🦄 Key pressed: ${event}`,
+        });
         
         mainWindowGlobalKeyPress(event);
     };    

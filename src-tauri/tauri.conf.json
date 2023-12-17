@@ -45,12 +45,9 @@
         "decorations": false,
         "focus": false,
         "transparent": true
-      },
-      {
-        "label": "local",
-        "title": "Tauri",
-        "url": "config.html"
-      }      
+      }
+
+
     ],
     "systemTray": {
       "iconPath": "icons/icon.png",

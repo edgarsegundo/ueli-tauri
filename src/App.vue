@@ -21,8 +21,52 @@ export default {
 
         const switchComponent = (componentName: string) => {
             selectedComponent.value = componentName;
+            loadComponentStyles(componentName);
         };
  
+
+        const loadComponentStyles = (componentName: string) => {
+            const styleId = `style-${componentName}`;
+            const existingStyle = document.getElementById(styleId);
+
+            if (existingStyle) {
+                existingStyle.remove();
+            }
+
+            const link = document.createElement('link');
+            link.id = styleId;
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            // link.href = `./path/to/${componentName}.css`;
+            link.href = `styles/test.css`;
+
+            document.head.appendChild(link);
+
+
+            const link2 = document.createElement('link');
+            link2.id = styleId;
+            link2.rel = 'stylesheet';
+            link2.type = 'text/css';
+            link2.href = `./node_modules/bulma/css/bulma.min.css`;
+            document.head.appendChild(link2);
+
+
+            const link3 = document.createElement('link');
+            link3.id = styleId;
+            link3.rel = 'stylesheet';
+            link3.type = 'text/css';
+            link3.href = `./node_modules/bulma-extensions/dist/css/bulma-extensions.min.css`;
+            document.head.appendChild(link3);
+
+
+            const link4 = document.createElement('link');
+            link4.id = styleId;
+            link4.rel = 'stylesheet';
+            link4.type = 'text/css';
+            link4.href = `./node_modules/@fortawesome/fontawesome-free/css/all.min.css`;
+            document.head.appendChild(link4);
+        };
+
         // listen to the `click` event and get a function to remove the event listener
         // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
         listen(Channels.getInstance().get("tray_menu_item_selected"), (event:any) => {

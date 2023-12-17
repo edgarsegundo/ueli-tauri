@@ -3,7 +3,7 @@
 
 use serde_json::json;
 // use serde_json::json;
-use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
+use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, WindowBuilder, WindowUrl};
 use tauri_plugin_positioner::{Position, WindowExt};
 use tauri_plugin_store::StoreBuilder;
 
@@ -139,6 +139,23 @@ fn main() {
         .setup(|app| {
         
         
+
+            let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
+                .fullscreen(false)
+                .resizable(false)
+                .title("User Configuration")
+                // .fullscreen(true)
+                .build();
+          
+            if let Ok(window) = result {
+                // Do something with the `window` instance, like showing it or setting its position
+                window.show().unwrap();
+                // ...
+            } else {
+                // Handle any potential errors during window creation
+                println!("Error creating second window!");
+            }
+
             let mut store = StoreBuilder::new(app.handle(), "store.bin".parse()?).build();
 
             let _ = store.insert("a".to_string(), json!("b")); // note that values must be serd_json::Value to be compatible with JS

@@ -13,11 +13,22 @@ As the project structure is already set up, you can bypass Step 1 and proceed di
 
 2. To build the project, look at the file `package.json`
 
-pnpm tauri dev      : to build and run the project
-pnpm tauri build --debug    : build with debug option
-RUST_BACKTRACE=1 pnpm tauri build --debug
+pnpm tauri dev                                  : to build and run the project
+pnpm tauri build --debug                        : build with debug option
+RUST_BACKTRACE=1 pnpm tauri build --debug       : it helps find bugs
 
 3. What progress has been made thus far
+
+- [I just learn how to register a child component](https://vuejs.org/guide/components/registration.html)
+```ts
+export default {
+  components: {
+    ComponentA: ComponentA
+  }
+  // ...
+}
+```
+
 
 - [21-nov-2023] I implemented all described code on this [article](https://betterprogramming.pub/create-menubar-app-with-tauri-510ab7f7c43d)
 - I installed tauri for VS
@@ -26,11 +37,76 @@ RUST_BACKTRACE=1 pnpm tauri build --debug
 
 4. Where did I last leave off?
 
+- I will refactor `loadComponentStyles` to delete and insert all other component's scripts in a better way (I need to think if this approach is efficient)
+
+- I was trying to add a new window using tauri.conf.json, but I ended up creating it in the main.rs, but I will leave it here so I can remember how it can be done. It's important to remember why I gave on this approach and it was because I could not connect the new window the vue file, so I will continue with the approach to switch the vue component and css for now
+
+How to create new window in main.rs
+```rust
+        .setup(|app| {
+
+            let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
+                .fullscreen(false)
+                .resizable(false)
+                .title("User Configuration")
+                // .fullscreen(true)
+                .build();
+          
+            if let Ok(window) = result {
+                // Do something with the `window` instance, like showing it or setting its position
+                window.show().unwrap();
+                // ...
+            } else {
+                // Handle any potential errors during window creation
+                println!("Error creating second window!");
+            }
+
+```
+
+How to create new window with tauri.conf.json
+```json
+    "windows": [
+        {
+            "fullscreen": false,
+            "resizable": false,
+            "title": "menubar xxxx",
+            "width": 700,
+            "height": 600,
+            "visible": false,
+            "hiddenTitle": true,
+            "decorations": false,
+            "focus": false,
+            "transparent": true
+        },
+        {
+        "fullscreen": false,
+        "resizable": false,
+        "title": "User Configuration",
+        "width": 700,
+        "height": 800,
+        "visible": true,
+        "hiddenTitle": false,
+        "decorations": false,
+        "focus": false,
+        "transparent": false,
+        "label": "local",
+        "url": "main.html"
+        }
+    ],
+```
+
+
+
 
 I will try this: https://aptabase.com/blog/persistent-state-tauri-apps
 
 https://github.com/tauri-apps/tauri-plugin-store
 
+electron-store-config-repository.ts
+config-repository.ts
+user-config-options.ts
+config-helpers.ts
+object-helpers.ts
 
 ```ts
 import { Store } from "tauri-plugin-store-api";
