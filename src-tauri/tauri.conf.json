@@ -46,8 +46,6 @@
         "focus": false,
         "transparent": true
       }
-
-
     ],
     "systemTray": {
       "iconPath": "icons/icon.png",

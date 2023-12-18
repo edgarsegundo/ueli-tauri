@@ -35,164 +35,159 @@
     </div>
 </div>
 
-
 </template>
 
 
 <script lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import { ref, computed } from "vue";
+import { ref, computed, defineComponent } from "vue";
 // import Greet from "../components/Greet.vue";
 // import { ref, computed, onMounted, watch, inject, onErrorCaptured } from 'vue';
-
 
 import { emit } from '@tauri-apps/api/event'
 import Channels from '../channels';
 
 
-export default {
-  setup() {
-    const executionIsPending = ref(false);
-    const userInputDisabled = computed(() => executionIsPending.value); // const userInputDisabled = () => executionIsPending.value;
+export default defineComponent({
+    setup() {
+        const executionIsPending = ref(false);
+        const userInputDisabled = computed(() => executionIsPending.value); // const userInputDisabled = () => executionIsPending.value;
 
-    const userConfirmationDialogVisible = ref(false);
-    const refreshIndexesIsPending = ref(false);
-    const loadingVisible = ref(false);
-    const userInput = ref("");
-
-
-    console.log('userInputDisabled: ', userInputDisabled);
-    console.log("*****  test ...")
-
-    const name = ref('Edgar')
-
-    document.onkeydown = (event: KeyboardEvent) => {
-
-        emit(Channels.getInstance().get("console_log_message"), {
-            theMessage: `🦄 Key pressed: ${event}`,
-        });
-        
-        mainWindowGlobalKeyPress(event);
-    };    
+        const userConfirmationDialogVisible = ref(false);
+        const refreshIndexesIsPending = ref(false);
+        const loadingVisible = ref(false);
+        const userInput = ref("");
 
 
-    const mainWindowGlobalKeyPress = (event: KeyboardEvent) => {
-        if ((event.ctrlKey && event.key.toLowerCase() === "i") || (event.metaKey && event.key === ",")) {
-            // ipcRenderer.send(IpcChannels.openSettingsWindow);
-        }
+        console.log('userInputDisabled: ', userInputDisabled);
+        console.log("*****  test ...")
 
-        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "l") {
-            // dispatcher.emit(VueEventChannels.focusOnInput);
-        }
+        const name = ref('Edgar')
 
-        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "r") {
-            // ipcRenderer.send(IpcChannels.reloadApp);
-        }
+        document.onkeydown = (event: KeyboardEvent) => {
 
-        if (event.key === "Escape") {
-            // ipcRenderer.send(IpcChannels.remoteLog, "🦄 (-2)");
-            // ipcRenderer.send(IpcChannels.mainWindowHideRequested);
-        }
+            emit(Channels.getInstance().get("console_log_message"), {
+                theMessage: `🦄 Key pressed: ${event}`,
+            });
+            
+            mainWindowGlobalKeyPress(event);
+        };    
 
-        if (event.key === "F5") {
-            // ipcRenderer.send(IpcChannels.indexRefreshRequested);
-        }
-    }    
 
-    const keyPress = (event:any) => {
-        const ctrlOrMeta = event.ctrlKey || event.metaKey;
+        const mainWindowGlobalKeyPress = (event: KeyboardEvent) => {
+            if ((event.ctrlKey && event.key.toLowerCase() === "i") || (event.metaKey && event.key === ",")) {
+                // ipcRenderer.send(IpcChannels.openSettingsWindow);
+            }
 
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "l") {
+                // dispatcher.emit(VueEventChannels.focusOnInput);
+            }
+
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "r") {
+                // ipcRenderer.send(IpcChannels.reloadApp);
+            }
+
+            if (event.key === "Escape") {
+                // ipcRenderer.send(IpcChannels.remoteLog, "🦄 (-2)");
+                // ipcRenderer.send(IpcChannels.mainWindowHideRequested);
+            }
+
+            if (event.key === "F5") {
+                // ipcRenderer.send(IpcChannels.indexRefreshRequested);
+            }
+        }    
+
+        const keyPress = (event:any) => {
+            const ctrlOrMeta = event.ctrlKey || event.metaKey;
+
+            emit('event-name', {
+            theMessage: '🦄 (3) Key pressed!',
+            })
+
+
+            if (event.key === "ArrowUp" || (ctrlOrMeta && event.key.toLowerCase() === "p")) {
+                event.preventDefault();
+                if (event.shiftKey) {
+                    // dispatcher.emit(VueEventChannels.selectInputHistoryItem, "previous");
+                } else {
+                    // dispatcher.emit(VueEventChannels.selectPreviousItem);
+                }
+            }
+
+            if (event.key === "ArrowDown" || (ctrlOrMeta && event.key.toLowerCase() === "n")) {
+                event.preventDefault();
+                if (event.shiftKey) {
+                    // dispatcher.emit(VueEventChannels.selectInputHistoryItem, "next");
+                } else {
+                    // dispatcher.emit(VueEventChannels.selectNextItem);
+                }
+            }
+
+            if (event.key === "PageUp") {
+                event.preventDefault();
+                // dispatcher.emit(VueEventChannels.pageUpPress);
+            }
+
+            if (event.key === "PageDown") {
+                event.preventDefault();
+                // dispatcher.emit(VueEventChannels.pageDownPress);
+            }
+
+            if (event.key.toLowerCase() === "f" && ctrlOrMeta) {
+                event.preventDefault();
+                // dispatcher.emit(VueEventChannels.favoritesRequested);
+            }
+
+            if (event.key === "Enter") {
+                // const privileged: boolean = event.shiftKey;
+                // const userConfirmed: boolean = userConfirmationDialogVisible.value;
+                // dispatcher.emit(VueEventChannels.enterPress, userInput.value, privileged, userConfirmed);
+                // ipcRenderer.send(IpcChannels.remoteLog, "🦄 (user-input-compnent.vue) enterPress emitted.");
+
+                emit('event-name', {
+                theMessage: '🦄 (4) Key pressed!',
+                })
+
+            }
+
+            if (event.key === "Tab") {
+                event.preventDefault();
+                // dispatcher.emit(VueEventChannels.tabPress);
+            }
+
+            if (event.key.toLowerCase() === "o" && ctrlOrMeta) {
+                // dispatcher.emit(VueEventChannels.openSearchResultLocationKeyPress);
+            }
+        };
+
+
+        // // listen to the `click` event and get a function to remove the event listener
+        // // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
+        // const unlisten = await listen('event-name', (event) => {
+        //   // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
+        //   // event.payload is the payload object
+        // })
+
+        // emits the `click` event with the object payload
         emit('event-name', {
-          theMessage: '🦄 (3) Key pressed!',
+        theMessage: 'Tauri is awesome!',
         })
 
 
-        if (event.key === "ArrowUp" || (ctrlOrMeta && event.key.toLowerCase() === "p")) {
-            event.preventDefault();
-            if (event.shiftKey) {
-                // dispatcher.emit(VueEventChannels.selectInputHistoryItem, "previous");
-            } else {
-                // dispatcher.emit(VueEventChannels.selectPreviousItem);
-            }
-        }
+        return {
+        executionIsPending,
+        userInputDisabled,
+        userConfirmationDialogVisible,
+        refreshIndexesIsPending,
+        loadingVisible,
+        keyPress,
+        userInput,
+        name
+        };
 
-        if (event.key === "ArrowDown" || (ctrlOrMeta && event.key.toLowerCase() === "n")) {
-            event.preventDefault();
-            if (event.shiftKey) {
-                // dispatcher.emit(VueEventChannels.selectInputHistoryItem, "next");
-            } else {
-                // dispatcher.emit(VueEventChannels.selectNextItem);
-            }
-        }
-
-        if (event.key === "PageUp") {
-            event.preventDefault();
-            // dispatcher.emit(VueEventChannels.pageUpPress);
-        }
-
-        if (event.key === "PageDown") {
-            event.preventDefault();
-            // dispatcher.emit(VueEventChannels.pageDownPress);
-        }
-
-        if (event.key.toLowerCase() === "f" && ctrlOrMeta) {
-            event.preventDefault();
-            // dispatcher.emit(VueEventChannels.favoritesRequested);
-        }
-
-        if (event.key === "Enter") {
-            // const privileged: boolean = event.shiftKey;
-            // const userConfirmed: boolean = userConfirmationDialogVisible.value;
-            // dispatcher.emit(VueEventChannels.enterPress, userInput.value, privileged, userConfirmed);
-            // ipcRenderer.send(IpcChannels.remoteLog, "🦄 (user-input-compnent.vue) enterPress emitted.");
-
-            emit('event-name', {
-              theMessage: '🦄 (4) Key pressed!',
-            })
-
-        }
-
-        if (event.key === "Tab") {
-            event.preventDefault();
-            // dispatcher.emit(VueEventChannels.tabPress);
-        }
-
-        if (event.key.toLowerCase() === "o" && ctrlOrMeta) {
-            // dispatcher.emit(VueEventChannels.openSearchResultLocationKeyPress);
-        }
-    };
-
-
-    // // listen to the `click` event and get a function to remove the event listener
-    // // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
-    // const unlisten = await listen('event-name', (event) => {
-    //   // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
-    //   // event.payload is the payload object
-    // })
-
-    // emits the `click` event with the object payload
-    emit('event-name', {
-      theMessage: 'Tauri is awesome!',
-    })
-
-
-    return {
-      executionIsPending,
-      userInputDisabled,
-      userConfirmationDialogVisible,
-      refreshIndexesIsPending,
-      loadingVisible,
-      keyPress,
-      userInput,
-      name
-    };
-
-  }
-
-  
-
-};
+    }
+});
 // export default {
 //   // props: ["config", "translations"],
 //   setup() {

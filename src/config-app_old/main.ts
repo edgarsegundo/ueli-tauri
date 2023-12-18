@@ -4,7 +4,28 @@ import App from "./App.vue";
 import Channels from '../channels';
 import { emit } from '@tauri-apps/api/event'
 
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
+
 const app = createApp(App);
+
+import { defineStore } from 'pinia'
+
+export const useStore = defineStore('store', {
+  state: () => {
+    return {
+      someState: 'hello pinia',
+    }
+  },
+  persist: true,
+})
+
+useStore().someState = 'hello world'
+
 
 app.config.errorHandler = (err, instance, info) => {
     let error_str:string = `❌ ${err}, info: ${info}`

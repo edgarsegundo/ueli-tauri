@@ -1,7 +1,7 @@
 import { createApp } from "vue";
-import "./styles.css";
+import "../base.css";
 import App from "./App.vue";
-import Channels from './channels';
+import Channels from '../channels';
 import { emit } from '@tauri-apps/api/event'
 
 const app = createApp(App);
