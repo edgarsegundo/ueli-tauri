@@ -19,6 +19,15 @@ RUST_BACKTRACE=1 pnpm tauri build --debug       : it helps find bugs
 
 3. What progress has been made thus far
 
+
+- I was able to access the `UserConfigOptions`
+
+```ts
+import { UserConfigOptions } from "../common/config/user-config-options";
+        const userConfig:UserConfigOptions | null = initialConfig.getConfig();
+        alert(userConfig?.generalOptions.language)
+```
+
 - [I just learn how to register a child component](https://vuejs.org/guide/components/registration.html)
 ```ts
 export default {

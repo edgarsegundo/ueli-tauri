@@ -81,41 +81,75 @@ import { SettingOsSpecific } from "./settings-os-specific";
 // import { platform } from "os";
 import { GeneralSettings } from "./general-settings";
 
-import { Store } from "tauri-plugin-store-api";
-import { emit } from '@tauri-apps/api/event'
-import Channels from '../channels';
+// import { Store } from "tauri-plugin-store-api";
+// import { emit } from '@tauri-apps/api/event'
+// import Channels from '../channels';
 import { ElectronStoreConfigRepository } from "../common/config/electron-store-config-repository";
 import { deepCopy } from "../common/helpers/object-helpers";
 import { defaultUserConfigOptions } from "../common/config/user-config-options";
-
+// import { getTranslationSet } from "../common/translation/translation-set-manager";
 
 import GeneralSettingsComponent from "./general-settings-component.vue";
 
 const autoHideErrorMessageDelayInMilliseconds = 5000;
 let autoHideErrorMessageTimeout: number;
 
-// Assuming the data structure is something like this
-interface StoreData {
-  value: number;
-  // other properties if there are more
-}
+import { UserConfigOptions } from "../common/config/user-config-options";
 
-const initialConfig = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions))
+
+
+const initialConfig:UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+
+console.log(initialConfig)
+
+// const initialConfig = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+
+// const app = new Vue({
+//     data: {
+//         config: initialConfig,
+//         translations: getTranslationSet(initialConfig.generalOptions.language),
+//     },
+//     el: "#app",
+
+
+
+
+
+// provide(/* key */ 'message', /* value */ 'hello!')
+// provide(/* key */ 'translations', /* value */ getTranslationSet(initialConfig.generalOptions.language))
+
+// import { provide } from 'vue'
+
+// export default {
+//   setup() {
+//     provide(/* key */ 'message', /* value */ 'hello!')
+//   }
+// }
 
 export default defineComponent({
     components: {
         GeneralSettingsComponent
     },
-    name: 'Config',
-  
+    name: 'ConfigApp',
+
     // data: {
     //     config: initialConfig,
-    // },  
+    //     translations: getTranslationSet(initialConfig.generalOptions.language),
+    // },
+
+
 
     setup() {
 
-        initialConfig.getConfig();
+        // provide(/* key */ 'message', /* value */ 'hello!')
+        
+        // const userConfig:UserConfigOptions | null = initialConfig.getConfig();
+        // let translationSet = getTranslationSet(config.generalOptions.language);
+        // alert(userConfig?.generalOptions.language)
 
+        // emit(Channels.getInstance().get("console_log_message"), {
+        //     theMessage:  `🦄 generalOptions.language: (${config.generalOptions.language})`,
+        // })
 
         // const store = new Store(".settings.dat");
 
@@ -127,42 +161,36 @@ export default defineComponent({
         // store.save(); // this manually saves the store, otherwise the store is only saved when your app is closed
 
 
-        const store = new Store(".settings.dat");
+// // ****************************************************************************    
+            // // Assuming the data structure is something like this
+            // interface StoreData {
+            // value: number;
+            // // other properties if there are more
+            // }
+//         const store = new Store(".settings.dat");
 
-        const asyncFunction = async () => {
-        await store.set("some-key", { value: 99 });
-        const val = await store.get("some-key");
-        console.log(val);
-        // Do something with the value
-        store.save();
-        };
+//         const asyncFunction = async () => {
+//             await store.set("some-key", { value: 99 });
+//             const val = await store.get("some-key");
+//             console.log(val);
+//             // Do something with the value
+//             store.save();
+//         };
 
-        // Call the asynchronous function
-        asyncFunction();
+//         // Call the asynchronous function
+//         asyncFunction();
 
-        const asyncFunctionGet = async () => {
-        // const val:StoreData = await store.get("some-key");
+//         const asyncFunctionGet = async () => {
+//             const val: StoreData | null = await store.get("some-key");
+//             console.log(val);
+//             let value = val ? val["value"] : 0;
+//             emit(Channels.getInstance().get("console_log_message"), {
+//                 theMessage:  `🦄 (3) store some-key: (${value})`,
+//             })
+//         };
 
-        const val: StoreData | null = await store.get("some-key");
-
-        console.log(val);
-
-        let value = val ? val["value"] : 0;
-        
-
-        emit(Channels.getInstance().get("console_log_message"), {
-            theMessage:  `🦄 (3) store some-key: (${value})`,
-        })
-
-
-        };
-
-        asyncFunctionGet();
-
-        // emit('console_log_message', {
-        //   theMessage:  `🦄 (4)`,
-        // })    
-
+//         asyncFunctionGet();
+// // ****************************************************************************
 
         const generalSettingMenuItems = ref<string[]>(Object.values(GeneralSettings).sort());
         const notification = ref({
@@ -231,12 +259,12 @@ export default defineComponent({
         });
 
         return {
-        generalSettingMenuItems,
-        notification,
-        notificationClass,
-        pluginSettingMenuItems,
-        removeNotification,
-        showNotification,
+            generalSettingMenuItems,
+            notification,
+            notificationClass,
+            pluginSettingMenuItems,
+            removeNotification,
+            showNotification,
         };
     }
 
@@ -485,3 +513,7 @@ export default defineComponent({
 </style>
 
 
+
+function defineProps(arg0: string[]) {
+  throw new Error("Function not implemented.");
+}

@@ -13,13 +13,11 @@ export class ElectronStoreConfigRepository implements ConfigRepository {
         this.defaultOptions = defaultOptions;
     }
 
-    public async getConfig(): Promise<UserConfigOptions> {
-        return new Promise((resolve) => {
-            const userConfig = this.store.get(this.configStoreKey);
-            resolve(mergeUserConfigWithDefault(userConfig, this.defaultOptions));
-        });
+    public getConfig(): UserConfigOptions {
+        const userConfig = this.store.get(this.configStoreKey);
+        return mergeUserConfigWithDefault(userConfig, this.defaultOptions);
     }
-
+        
     public saveConfig(updatedConfig: UserConfigOptions): Promise<void> {
         return new Promise((resolve) => {
             this.store.set(this.configStoreKey, updatedConfig);

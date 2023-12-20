@@ -3,7 +3,7 @@
 
 use serde_json::json;
 // use serde_json::json;
-use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, WindowBuilder, WindowUrl};
+use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, WindowBuilder, WindowUrl, Window, WindowEvent};
 use tauri_plugin_positioner::{Position, WindowExt};
 use tauri_plugin_store::StoreBuilder;
 
@@ -28,6 +28,8 @@ struct Payload {
 //     format!("Hello, {}! You've been greeted from Rust!", name)
 // }
 
+// Define a mutable option to hold the window instance
+static mut CONFIG_WINDOW: Option<Window> = None;
 
 
 
@@ -102,17 +104,73 @@ fn main() {
                         // app.emit_all("event-name", Payload { message: "show".into() }).unwrap();
                     }
                     "config" => {
-                        let window: tauri::Window = app.get_window("main").unwrap();
-                        // use TrayCenter as initial window position
-                        let _ = window.move_window(Position::TrayCenter);
-                        if window.is_visible().unwrap() {
-                            window.hide().unwrap();
+                        
+                        println!("*** (1)");
+                        // Check if the window is already created
+                        if let Some(window) = unsafe { &CONFIG_WINDOW } {
+                            println!("*** (2)");
+                            // The window is already created, so just show it
+                            // window.show().unwrap();
+                            let _ = window.show().map_err(|e| {
+                                eprintln!("Error showing window: {:?}", e);
+                            });
+
                         } else {
-                            window.show().unwrap();
-                            window.set_focus().unwrap();
+                            // The window is not created, so create it
+                            let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
+                                .fullscreen(false)
+                                .resizable(false)
+                                .title("User Configuration")
+                                .build();
+
+                            if let Ok(window) = result {
+                                // Save the window instance for future use
+                                unsafe {
+                                    CONFIG_WINDOW = Some(window.clone());
+                                }
+
+                                // Handle the window events
+                                window.on_window_event(move |event| {
+                                    // Check for the CloseRequested event
+                                    // if let WindowEvent::CloseRequested { api , .. } = event {
+                                    if let WindowEvent::CloseRequested{ .. } = event {
+                                        // Handle the close event as needed
+                                        // ...
+                                        
+
+                                        // Set CONFIG_WINDOW to None
+                                        unsafe {
+                                            CONFIG_WINDOW = None;
+                                        }
+                                    }
+                                });                             
+
+                                // Do something with the `window` instance, like showing it or setting its position
+                                window.show().unwrap();
+                                // ...
+                            } else {
+                                // Handle any potential errors during window creation
+                                println!("Error creating second window!");
+                            }
                         }
 
-                        window.emit(&channels::get_channel("tray_menu_item_selected"), Payload { message: "config".into() }).unwrap();                        
+                        // let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
+                        // .fullscreen(false)
+                        // .resizable(false)
+                        // .title("User Configuration")
+                        // // .fullscreen(true)
+                        // .build();
+                  
+                        // if let Ok(window) = result {
+                        //     // Do something with the `window` instance, like showing it or setting its position
+                        //     window.show().unwrap();
+                        //     // ...
+                        // } else {
+                        //     // Handle any potential errors during window creation
+                        //     println!("Error creating second window!");
+                        // }
+        
+                        // window.emit(&channels::get_channel("tray_menu_item_selected"), Payload { message: "config".into() }).unwrap();                        
                     }
 
                     "quit" => {
@@ -140,21 +198,21 @@ fn main() {
         
         
 
-            let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
-                .fullscreen(false)
-                .resizable(false)
-                .title("User Configuration")
-                // .fullscreen(true)
-                .build();
+            // let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
+            //     .fullscreen(false)
+            //     .resizable(false)
+            //     .title("User Configuration")
+            //     // .fullscreen(true)
+            //     .build();
           
-            if let Ok(window) = result {
-                // Do something with the `window` instance, like showing it or setting its position
-                window.show().unwrap();
-                // ...
-            } else {
-                // Handle any potential errors during window creation
-                println!("Error creating second window!");
-            }
+            // if let Ok(window) = result {
+            //     // Do something with the `window` instance, like showing it or setting its position
+            //     window.show().unwrap();
+            //     // ...
+            // } else {
+            //     // Handle any potential errors during window creation
+            //     println!("Error creating second window!");
+            // }
 
             let mut store = StoreBuilder::new(app.handle(), "store.bin".parse()?).build();
 

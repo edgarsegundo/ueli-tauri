@@ -1,6 +1,352 @@
 <template>
+<div v-if="visible">
+    <div class="settings__setting-title title is-3">
+        <span>
+            {{ translations?.generalSettings }}
+            <!-- {{ translations.generalSettings }} -->
+        </span>
+        <!-- <div>
+            <div class="dropdown is-right" :class="{ 'is-active' : dropdownVisible}">
+                <div class="dropdown-trigger">
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="dropdownTrigger">
+                        <span class="icon">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                        <a href="#" class="dropdown-item" @click="importSettings">
+                            <span class="icon"><i class="fa fa-file-import"></i></span>
+                            <span>{{ translations.generalSettingsImportSettings }}</span>
+                        </a>
+                        <a class="dropdown-item" @click="exportCurrentSettings">
+                            <span class="icon"><i class="fa fa-file-export"></i></span>
+                            <span>{{ translations.generalSettingsExportSettings }}</span>
+                        </a>
+                        <a class="dropdown-item" @click="resetAllSettingsToDefault">
+                            <span class="icon"><i class="fas fa-undo-alt"></i></span>
+                            <span>{{ translations.generalSettingsResetAllSettings }}</span>
+                        </a>
+                        <a class="dropdown-item" @click="clearExecutionLog">
+                            <span class="icon"><i class="fas fa-trash"></i></span>
+                            <span>{{ translations.clearExecutionLog }}</span>
+                        </a>
+                        <a class="dropdown-item" @click="openDebugLog">
+                            <span class="icon"><i class="fas fa-bug"></i></span>
+                            <span>{{ translations.openDebugLog }}</span>
+                        </a>
+                        <a class="dropdown-item" @click="openTempFolder">
+                            <span class="icon"><i class="fas fa-folder"></i></span>
+                            <span>{{ translations.openTempFolder }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <button class="button" @click="resetAll">
+                <span class="icon">
+                    <i class="fas fa-undo-alt"></i>
+                </span>
+            </button>
+        </div> -->
+    </div>
+    <!-- <div class="settings__setting-content">
 
-<h1>Edgar Rezende de Paula Segundo</h1>
+        <div class="box">
+            <div class="settings__options-container">
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsLanguage }}</div>
+                    <div class="settings__option-content">
+                        <div class="field is-grouped is-grouped-right">
+                            <div class="control">
+                                <div class="select">
+                                    <select v-model="config.generalOptions.language" @change="updateConfig()">
+                                        <option v-for="availableLanguage in availableLanguages">{{ availableLanguage }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsAutostartApp }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="autoStartCheckbox" type="checkbox" name="autoStartCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.autostart" @change="updateConfig()">
+                                <label for="autoStartCheckbox"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsShowTrayIcon }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="showTrayIconCheckbox" type="checkbox" name="showTrayIconCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.showTrayIcon" @change="updateConfig()">
+                                <label for="showTrayIconCheckbox"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsClearCachesOnExit }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="clearCachesOnExit" type="checkbox" name="clearCachesOnExit" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.clearCachesOnExit" @change="updateConfig()">
+                                <label for="clearCachesOnExit"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsHotKey }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right">
+                            <div class="control">
+                                <div class="select">
+                                    <select v-model="config.generalOptions.hotKey.modifier" @change="updateConfig()">
+                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.secondModifier)" :value="globalHotKeyModifier">
+                                            {{ getTranslatedGlobalHotKeyModifier(globalHotKeyModifier) }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-static">
+                                    <span class="icon">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="control">
+                                <div class="select">
+                                    <select v-model="config.generalOptions.hotKey.secondModifier" @change="updateConfig()">
+                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.modifier)" :value="globalHotKeyModifier">
+                                            {{ getTranslatedGlobalHotKeyModifier(globalHotKeyModifier) }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-static">
+                                    <span class="icon">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="control">
+                                <div class="select">
+                                    <select v-model="config.generalOptions.hotKey.key" @change="updateConfig()">
+                                        <option v-for="globalHotKeyKey in globalHotKeyKeys" :value="globalHotKeyKey">
+                                            {{ getTranslatedGlobalHotKeyKey(globalHotKeyKey) }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsRescanIntervalEnabled }}</div>
+                    <div class="settings__option-content">
+                        <div class="field is-grouped is-grouped-right">
+                            <div class="control">
+                                <input id="rescanEnabledCheckbox" type="checkbox" name="rescanEnabledCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.rescanEnabled" @change="updateConfig()">
+                                <label for="rescanEnabledCheckbox"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option" v-if="config.generalOptions.rescanEnabled">
+                    <div class="settings__option-name">{{ translations.generalSettingsRescanInterval }}</div>
+                    <div class="settings__option-content">
+                        <div class="field is-grouped is-grouped-right">
+                            <div class="control">
+                                <input class="input" type="number" min="10" v-model="config.generalOptions.rescanIntervalInSeconds" @change="updateConfig()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">Allow window move</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="allowWindowMoveToggle" type="checkbox" name="allowWindowMoveToggle" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.allowWindowMove" @change="updateConfig()">
+                                <label for="allowWindowMoveToggle"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option" v-if="config.generalOptions.allowWindowMove">
+                    <div class="settings__option-name">{{ translations.generalSettingsRememberWindowPosition }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="rememberWindowPositionCheckbox" type="checkbox" name="rememberWindowPositionCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.rememberWindowPosition" @change="updateConfig()">
+                                <label for="rememberWindowPositionCheckbox"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option" v-if="!config.generalOptions.rememberWindowPosition">
+                    <div class="settings__option-name">{{ translations.generalSettingsShowAlwaysOnPrimaryDisplay }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="showAlwaysOnPrimaryDisplayCheckbox" type="checkbox" name="showAlwaysOnPrimaryDisplayCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.showAlwaysOnPrimaryDisplay" @change="updateConfig()">
+                                <label for="showAlwaysOnPrimaryDisplayCheckbox"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsLogExecution }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="logExecutionCheckbox" type="checkbox" name="logExecutionCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.logExecution" @change="updateConfig()">
+                                <label for="logExecutionCheckbox"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsPersistentUserInput }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="persistentUserInput" type="checkbox" name="persistentUserInput" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.persistentUserInput" @change="updateConfig()">
+                                <label for="persistentUserInput"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsHideMainWindowAfterExecution }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="hideMainWindowAfterExecution" type="checkbox" name="hideMainWindowAfterExecution" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.hideMainWindowAfterExecution" @change="updateConfig()">
+                                <label for="hideMainWindowAfterExecution"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsHideMainWindowOnBlur }}</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <input id="hideMainWindowOnBlur" type="checkbox" name="hideMainWindowOnBlur" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.hideMainWindowOnBlur" @change="updateConfig()">
+                                <label for="hideMainWindowOnBlur"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">{{ translations.generalSettingsDecimalSeparator }}</div>
+                    <div class="settings__option-content">
+                        <div class="field is-grouped is-grouped-right">
+                            <div class="buttons has-addons">
+                                <button class="button"
+                                    :class="{ 'is-success': config.generalOptions.decimalSeparator == '.' }"
+                                    @click="config.generalOptions.decimalSeparator = '.'; updateConfig();">.</button>
+                                <button class="button"
+                                    :class="{ 'is-success': config.generalOptions.decimalSeparator == ',' }"
+                                    @click="config.generalOptions.decimalSeparator = ','; updateConfig();">,</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings__option">
+                    <div class="settings__option-name">Update</div>
+                    <div class="settings__option-content">
+                        <div class="field has-addons has-addons-right vertical-center">
+                            <div class="control">
+                                <button class="button" v-if="updateStatus.checking" disabled>
+                                    {{ translations.generalSettingsCheckingForUpdate }}...
+                                </button>
+                                <button class="button" :disabled="appIsInDevelopment" v-if="updateStatus.updateAvailable" @click="downloadUpdate">
+                                    {{ translations.generalSettingsDownloadUpdate }}
+                                </button>
+                                <button class="button" disabled v-if="updateStatus.downloading">
+                                    {{ translations.generalSettingsDownloadingUpdate }}...
+                                </button>
+                                <button class="button" v-if="updateStatus.latestVersionRunning" disabled>
+                                    {{ translations.generalSettingsLatestVersion }}
+                                </button>
+                                <button class="button" v-if="updateStatus.errorOnUpdateCheck" disabled>
+                                    {{ translations.generalSettingsErrorWhileCheckingForUpdate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="settings__options-container">
+                <div class="settings__option">
+                    <div class="settings__option-name">
+                        ueli
+                    </div>
+                    <div class="settings__option-content has-text-right">
+                        {{ appInfo.ueli }}
+                    </div>
+                </div>
+                <div class="settings__option">
+                    <div class="settings__option-name">
+                        Electron
+                    </div>
+                    <div class="settings__option-content has-text-right">
+                        {{ appInfo.electron }}
+                    </div>
+                </div>
+                <div class="settings__option">
+                    <div class="settings__option-name">
+                        Node
+                    </div>
+                    <div class="settings__option-content has-text-right">
+                        {{ appInfo.node }}
+                    </div>
+                </div>
+                <div class="settings__option">
+                    <div class="settings__option-name">
+                        V8
+                    </div>
+                    <div class="settings__option-content has-text-right">
+                        {{ appInfo.v8 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> -->
+</div>
+
+
 </template>
 
 <script lang="ts">
@@ -32,14 +378,20 @@
 // import { deepCopy } from "../../common/helpers/object-helpers";
 // import { OperatingSystem } from "../../common/operating-system";
 
-import { Store } from "tauri-plugin-store-api";
-import { emit } from '@tauri-apps/api/event'
-import Channels from '../channels';
+// import { Store } from "tauri-plugin-store-api";
+// import { emit } from '@tauri-apps/api/event'
+// import Channels from '../channels';
 
 
-import { defineComponent, // ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
+import { defineComponent, inject // inject, ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
 } from 'vue';
-import { UserConfigOptions } from "../common/config/user-config-options";
+import { ElectronStoreConfigRepository } from '../common/config/electron-store-config-repository';
+import { defaultUserConfigOptions, UserConfigOptions } from '../common/config/user-config-options';
+import { deepCopy } from '../common/helpers/object-helpers';
+import { TranslationSet } from '../common/translation/translation-set';
+import { getTranslationSet } from '../common/translation/translation-set-manager';
+// import { UserConfigOptions } from "../common/config/user-config-options";
+// import { TranslationSet } from "../common/translation/translation-set";
 
 // Import your types, constants, and helper functions
 
@@ -73,42 +425,49 @@ import { UserConfigOptions } from "../common/config/user-config-options";
 
 // const initialConfig = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions))
 
+
 export default defineComponent({
     name: 'general-settings',
-
     setup() {
+        // approach 1
+        const translations2: TranslationSet | undefined = inject('translations');
+        console.log(translations2)
 
-        emit(Channels.getInstance().get("console_log_message"), {
-            theMessage: `🦄 (-22)`,
-        })
+        // approach 2
+        const initialConfig: UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+        const translations: TranslationSet | undefined = getTranslationSet(initialConfig.generalOptions.language);
+
+        // emit(Channels.getInstance().get("console_log_message"), {
+        //     theMessage: `🦄 (-22)`,
+        // })
 
 
-        const asyncFunctionGet = async () => {
+        // const asyncFunctionGet = async () => {
 
-            emit(Channels.getInstance().get("console_log_message"), {
-                theMessage:  `🦄 (5)`,
-            })
+        //     emit(Channels.getInstance().get("console_log_message"), {
+        //         theMessage:  `🦄 (5)`,
+        //     })
 
-            const store = new Store(".settings.dat");
-            const appearanceOptions:UserConfigOptions | null = await store.get("appearanceOptions");
+        //     const store = new Store(".settings.dat");
+        //     const appearanceOptions:UserConfigOptions | null = await store.get("appearanceOptions");
 
-            // const val: UserConfigOptions | null = await store.get("some-key");
+        //     // const val: UserConfigOptions | null = await store.get("some-key");
 
-            // let value = val ? val["value"] : 0;
+        //     // let value = val ? val["value"] : 0;
             
 
-            emit(Channels.getInstance().get("console_log_message"), {
-                theMessage: `🦄 appearanceOptions: (${appearanceOptions})`,
-            })
+        //     emit(Channels.getInstance().get("console_log_message"), {
+        //         theMessage: `🦄 appearanceOptions: (${appearanceOptions})`,
+        //     })
 
-            // emit(Channels.getInstance().get("console_log_message"), {
-            //     theMessage:  `🦄 (99)`,
-            // })
+        //     // emit(Channels.getInstance().get("console_log_message"), {
+        //     //     theMessage:  `🦄 (99)`,
+        //     // })
 
 
-        };
+        // };
 
-        asyncFunctionGet();
+        // asyncFunctionGet();
 
 
 
@@ -129,9 +488,13 @@ export default defineComponent({
 
         return {
             clearExecutionLog,
+            visible: true,
+            translations,
+            // translations
         };
-    }
+    },
 });
+
 
 // const { config, translations } = defineProps(['config', 'translations']);
 // const emits = defineEmits();
