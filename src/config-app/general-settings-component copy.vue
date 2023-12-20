@@ -348,6 +348,38 @@
 
 <script lang="ts">
 
+// import Vue from "vue";
+// import { vueEventDispatcher } from "../vue-event-dispatcher";
+// import { VueEventChannels } from "../vue-event-channels";
+// import { UserConfigOptions } from "../../common/config/user-config-options";
+// import { join } from "path";
+// import { defaultGeneralOptions } from "../../common/config/general-options";
+// import { GlobalHotKeyModifier } from "../../common/global-hot-key/global-hot-key-modifier";
+// import { GlobalHotKeyKey } from "../../common/global-hot-key/global-hot-key-key";
+// import { Language } from "../../common/translation/language";
+// import { getFilePath, getFolderPath } from "../dialogs";
+// import { NotificationType } from "../../common/notification-type";
+
+// import { TranslationSet } from "../../src/common/translation/translation-set";
+
+// import { FileHelpers } from "../../common/helpers/file-helpers";
+// import { isValidJson, mergeUserConfigWithDefault } from "../../common/helpers/config-helpers";
+// import { defaultUserConfigOptions } from "../../common/config/user-config-options";
+// import { GeneralSettings } from "./general-settings";
+// import { UserConfirmationDialogParams, UserConfirmationDialogType } from "./modals/user-confirmation-dialog-params";
+// import { UpdateCheckResult } from "../../common/update-check-result";
+// import { isDev } from "../../common/is-dev";
+// import { getCurrentOperatingSystem } from "../../common/helpers/operating-system-helpers";
+// import { platform } from "os";
+// import { version } from "../../../package.json";
+// import { deepCopy } from "../../common/helpers/object-helpers";
+// import { OperatingSystem } from "../../common/operating-system";
+
+// import { Store } from "tauri-plugin-store-api";
+// import { emit } from '@tauri-apps/api/event'
+// import Channels from '../channels';
+
+
 import { defineComponent, inject, ref, computed, // inject, ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
 } from 'vue';
 import { ElectronStoreConfigRepository } from '../common/config/electron-store-config-repository';
@@ -361,6 +393,10 @@ import { GlobalHotKeyKey } from "../common/global-hot-key/global-hot-key-key";
 
 // import { UserConfigOptions } from "../common/config/user-config-options";
 // import { TranslationSet } from "../common/translation/translation-set";
+
+// Import your types, constants, and helper functions
+
+
 // const operatingSystem = getCurrentOperatingSystem(platform());
 // const appIsInDevelopment = isDev(process.execPath);
 
@@ -387,6 +423,8 @@ const appInfo = {
     ueli: "1.0.0", // version,
     v8: "1.0.0" // process.versions.v8,
 };
+
+// const initialConfig = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions))
 
 const dropdownVisible = ref(false);
 
@@ -468,19 +506,6 @@ export default defineComponent({
             dropdownVisible.value = !dropdownVisible.value;
         }
 
-        // const clearExecutionLog = () {
-        //     const translations: TranslationSet = this.translations;
-        //     const userConfirmationDialogParams: UserConfirmationDialogParams = {
-        //         callback: () => {
-        //             vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
-        //         },
-        //         message: translations.generalSettingsClearExecutionLogWarning,
-        //         modalTitle: translations.clearExecutionLog,
-        //         type: UserConfirmationDialogType.Default,
-        //     };
-        //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
-        // },        
-
 
         return {
             clearExecutionLog,
@@ -495,8 +520,7 @@ export default defineComponent({
             // updateStatus: deepCopy(initialUpdateStatus),
             updateStatus,
             appInfo,
-            dropdownTrigger,
-            // clearExecutionLog
+            dropdownTrigger
         };
     },
 
