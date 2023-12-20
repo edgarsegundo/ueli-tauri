@@ -116,11 +116,27 @@ fn main() {
                             });
 
                         } else {
+                            // Assuming you have options for width and height
+                            let width_option: Option<f64> = Some(1000.00);
+                            let height_option: Option<f64> = Some(750.00);
+
+                            // Use match or unwrap_or to handle the Option
+                            let width: f64 = match width_option {
+                                Some(value) => value,
+                                None => 1000.00
+                            };
+
+                            let height: f64 = match height_option {
+                                Some(value) => value,
+                                None => 750.00
+                            };
+
                             // The window is not created, so create it
                             let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
                                 .fullscreen(false)
                                 .resizable(false)
                                 .title("User Configuration")
+                                .inner_size(width, height)
                                 .build();
 
                             if let Ok(window) = result {

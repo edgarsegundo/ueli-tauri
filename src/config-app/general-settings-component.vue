@@ -3,9 +3,8 @@
     <div class="settings__setting-title title is-3">
         <span>
             {{ translations?.generalSettings }}
-            <!-- {{ translations.generalSettings }} -->
         </span>
-        <!-- <div>
+        <div>
             <div class="dropdown is-right" :class="{ 'is-active' : dropdownVisible}">
                 <div class="dropdown-trigger">
                     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" @click="dropdownTrigger">
@@ -48,9 +47,9 @@
                     <i class="fas fa-undo-alt"></i>
                 </span>
             </button>
-        </div> -->
+        </div>
     </div>
-    <!-- <div class="settings__setting-content">
+    <div class="settings__setting-content">
 
         <div class="box">
             <div class="settings__options-container">
@@ -62,7 +61,7 @@
                             <div class="control">
                                 <div class="select">
                                     <select v-model="config.generalOptions.language" @change="updateConfig()">
-                                        <option v-for="availableLanguage in availableLanguages">{{ availableLanguage }}</option>
+                                        <option v-for="availableLanguage in availableLanguages" :key="availableLanguage">{{ availableLanguage }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -113,7 +112,7 @@
                             <div class="control">
                                 <div class="select">
                                     <select v-model="config.generalOptions.hotKey.modifier" @change="updateConfig()">
-                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.secondModifier)" :value="globalHotKeyModifier">
+                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.secondModifier)" :key="globalHotKeyModifier" :value="globalHotKeyModifier" >
                                             {{ getTranslatedGlobalHotKeyModifier(globalHotKeyModifier) }}
                                         </option>
                                     </select>
@@ -129,7 +128,7 @@
                             <div class="control">
                                 <div class="select">
                                     <select v-model="config.generalOptions.hotKey.secondModifier" @change="updateConfig()">
-                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.modifier)" :value="globalHotKeyModifier">
+                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.modifier)" :key="globalHotKeyModifier" :value="globalHotKeyModifier">
                                             {{ getTranslatedGlobalHotKeyModifier(globalHotKeyModifier) }}
                                         </option>
                                     </select>
@@ -145,7 +144,7 @@
                             <div class="control">
                                 <div class="select">
                                     <select v-model="config.generalOptions.hotKey.key" @change="updateConfig()">
-                                        <option v-for="globalHotKeyKey in globalHotKeyKeys" :value="globalHotKeyKey">
+                                        <option v-for="globalHotKeyKey in globalHotKeyKeys" :key="globalHotKeyKey" :value="globalHotKeyKey">
                                             {{ getTranslatedGlobalHotKeyKey(globalHotKeyKey) }}
                                         </option>
                                     </select>
@@ -343,10 +342,8 @@
             </div>
         </div>
 
-    </div> -->
+    </div>
 </div>
-
-
 </template>
 
 <script lang="ts">
@@ -383,13 +380,17 @@
 // import Channels from '../channels';
 
 
-import { defineComponent, inject // inject, ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
+import { defineComponent, inject, ref, computed, // inject, ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
 } from 'vue';
 import { ElectronStoreConfigRepository } from '../common/config/electron-store-config-repository';
 import { defaultUserConfigOptions, UserConfigOptions } from '../common/config/user-config-options';
 import { deepCopy } from '../common/helpers/object-helpers';
 import { TranslationSet } from '../common/translation/translation-set';
 import { getTranslationSet } from '../common/translation/translation-set-manager';
+import { Language } from "../common/translation/language";
+import { GlobalHotKeyModifier } from "../common/global-hot-key/global-hot-key-modifier";
+import { GlobalHotKeyKey } from "../common/global-hot-key/global-hot-key-key";
+
 // import { UserConfigOptions } from "../common/config/user-config-options";
 // import { TranslationSet } from "../common/translation/translation-set";
 
@@ -400,31 +401,45 @@ import { getTranslationSet } from '../common/translation/translation-set-manager
 // const appIsInDevelopment = isDev(process.execPath);
 
 
-// interface UpdateStatus {
-//     checking: boolean;
-//     downloading: boolean;
-//     errorOnUpdateCheck: boolean;
-//     latestVersionRunning: boolean;
-//     updateAvailable: boolean;
-// }
+interface UpdateStatus {
+    checking: boolean;
+    downloading: boolean;
+    errorOnUpdateCheck: boolean;
+    latestVersionRunning: boolean;
+    updateAvailable: boolean;
+}
 
-// const initialUpdateStatus: UpdateStatus = {
-//     checking: true,
-//     downloading: false,
-//     errorOnUpdateCheck: false,
-//     latestVersionRunning: false,
-//     updateAvailable: false,
-// };
+const initialUpdateStatus: UpdateStatus = {
+    checking: true,
+    downloading: false,
+    errorOnUpdateCheck: false,
+    latestVersionRunning: false,
+    updateAvailable: false,
+};
 
-// const appInfo = {
-//     electron: "1.0.0", // process.versions.electron,
-//     node: "14.4.4", // process.versions.node,
-//     ueli: "1.0.0", // version,
-//     v8: "1.0.0" // process.versions.v8,
-// };
+const appInfo = {
+    electron: "1.0.0", // process.versions.electron,
+    node: "14.4.4", // process.versions.node,
+    ueli: "1.0.0", // version,
+    v8: "1.0.0" // process.versions.v8,
+};
 
 // const initialConfig = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions))
 
+const dropdownVisible = ref(false);
+
+// approach 2
+const config: UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+const translations: TranslationSet | undefined = getTranslationSet(config.generalOptions.language);
+
+const globalHotKeyModifiers = computed(() =>
+    Object.values(GlobalHotKeyModifier).map((modifier) => modifier)
+);
+const globalHotKeyKeys = computed(() =>
+    Object.values(GlobalHotKeyKey).map((key) => key)
+);
+
+const updateStatus = ref(deepCopy(initialUpdateStatus));
 
 export default defineComponent({
     name: 'general-settings',
@@ -433,9 +448,10 @@ export default defineComponent({
         const translations2: TranslationSet | undefined = inject('translations');
         console.log(translations2)
 
-        // approach 2
-        const initialConfig: UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
-        const translations: TranslationSet | undefined = getTranslationSet(initialConfig.generalOptions.language);
+        // // approach 2
+        // const config: UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+        // const translations: TranslationSet | undefined = getTranslationSet(config.generalOptions.language);
+        
 
         // emit(Channels.getInstance().get("console_log_message"), {
         //     theMessage: `🦄 (-22)`,
@@ -490,9 +506,236 @@ export default defineComponent({
             clearExecutionLog,
             visible: true,
             translations,
-            // translations
+            config,
+            dropdownVisible,
+            availableLanguages: Object.values(Language).map((language) => language),
+            // globalHotKeyModifiers: Object.values(GlobalHotKeyModifier).map((modifier) => modifier),
+            globalHotKeyModifiers,
+            globalHotKeyKeys,
+            // updateStatus: deepCopy(initialUpdateStatus),
+            updateStatus,
+            appInfo
         };
     },
+
+
+    methods: {
+        // clearExecutionLog() {
+        //     const translations: TranslationSet = this.translations;
+        //     const userConfirmationDialogParams: UserConfirmationDialogParams = {
+        //         callback: () => {
+        //             vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
+        //         },
+        //         message: translations.generalSettingsClearExecutionLogWarning,
+        //         modalTitle: translations.clearExecutionLog,
+        //         type: UserConfirmationDialogType.Default,
+        //     };
+        //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
+        // },
+        // dropdownTrigger() {
+        //     this.dropdownVisible = !this.dropdownVisible;
+        // },
+        // exportCurrentSettings() {
+        //     getFolderPath()
+        //         .then((filePath: string) => {
+        //             const config: UserConfigOptions = this.config;
+        //             const translations: TranslationSet = this.translations;
+        //             const settingsFilePath = join(filePath, "ueli.config.json");
+        //             FileHelpers.writeFile(settingsFilePath, JSON.stringify(config, undefined, 2))
+        //                 .then(() =>
+        //                     vueEventDispatcher.$emit(
+        //                         VueEventChannels.notification,
+        //                         translations.generalSettingsSuccessfullyExportedSettings,
+        //                         NotificationType.Info,
+        //                     ),
+        //                 )
+        //                 .catch((err) =>
+        //                     vueEventDispatcher.$emit(VueEventChannels.notification, err, NotificationType.Error),
+        //                 );
+        //         })
+        //         .catch(() => {
+        //             // do nothing when no folder selected
+        //         });
+        // },
+        getTranslatedGlobalHotKeyModifier(hotkeyModifier: GlobalHotKeyModifier): string {
+            // const translations: TranslationSet = this.translations;
+            switch (hotkeyModifier) {
+                case GlobalHotKeyModifier.Alt:
+                    return translations.hotkeyModifierAlt;
+                case GlobalHotKeyModifier.AltGr:
+                    return translations.hotkeyModifierAltGr;
+                case GlobalHotKeyModifier.Command:
+                    return translations.hotkeyModifierCommand;
+                case GlobalHotKeyModifier.Control:
+                    return translations.hotkeyModifierControl;
+                case GlobalHotKeyModifier.Option:
+                    return translations.hotkeyModifierOption;
+                case GlobalHotKeyModifier.Shift:
+                    return translations.hotkeyModifierShift;
+                case GlobalHotKeyModifier.Super:
+                    return translations.hotkeyModifierSuper;
+                default:
+                    return hotkeyModifier;
+            }
+        },
+        getTranslatedGlobalHotKeyKey(hotkeyKey: GlobalHotKeyKey): string {
+            switch (hotkeyKey) {
+                case GlobalHotKeyKey.Backspace:
+                    return translations.hotkeyKeyBackspace;
+                case GlobalHotKeyKey.Delete:
+                    return translations.hotkeyKeyDelete;
+                case GlobalHotKeyKey.Down:
+                    return translations.hotkeyKeyDown;
+                case GlobalHotKeyKey.End:
+                    return translations.hotkeyKeyEnd;
+                case GlobalHotKeyKey.Escape:
+                    return translations.hotkeyKeyEscape;
+                case GlobalHotKeyKey.Home:
+                    return translations.hotkeyKeyHome;
+                case GlobalHotKeyKey.Insert:
+                    return translations.hotkeyKeyInsert;
+                case GlobalHotKeyKey.Left:
+                    return translations.hotkeyKeyLeft;
+                case GlobalHotKeyKey.PageDown:
+                    return translations.hotkeyKeyPageDown;
+                case GlobalHotKeyKey.PageUp:
+                    return translations.hotkeyKeyPageUp;
+                case GlobalHotKeyKey.Plus:
+                    return translations.hotkeyKeyPlus;
+                case GlobalHotKeyKey.Return:
+                    return translations.hotkeyKeyReturn;
+                case GlobalHotKeyKey.Right:
+                    return translations.hotkeyKeyRight;
+                case GlobalHotKeyKey.Space:
+                    return translations.hotkeyKeySpace;
+                case GlobalHotKeyKey.Tab:
+                    return translations.hotkeyKeyTab;
+                case GlobalHotKeyKey.Up:
+                    return translations.hotkeyKeyUp;
+                default:
+                    return hotkeyKey;
+            }
+        },
+        // importSettings() {
+        //     const translations: TranslationSet = this.translations;
+        //     const filter: Electron.FileFilter = {
+        //         extensions: ["json"],
+        //         name: translations.generalSettingsImportFileFilterJsonFiles,
+        //     };
+        //     getFilePath([filter])
+        //         .then((filePath) => {
+        //             FileHelpers.readFile(filePath)
+        //                 .then((fileContent) => {
+        //                     if (isValidJson(fileContent)) {
+        //                         const userConfig: UserConfigOptions = JSON.parse(fileContent);
+        //                         const config: UserConfigOptions = mergeUserConfigWithDefault(
+        //                             userConfig,
+        //                             defaultUserConfigOptions,
+        //                         );
+        //                         this.config = config;
+        //                         this.updateConfig();
+        //                     } else {
+        //                         vueEventDispatcher.$emit(
+        //                             VueEventChannels.notification,
+        //                             translations.generalSettingsImportErrorInvalidConfig,
+        //                             NotificationType.Error,
+        //                         );
+        //                     }
+        //                 })
+        //                 .catch((err) =>
+        //                     vueEventDispatcher.$emit(VueEventChannels.notification, err, NotificationType.Error),
+        //                 )
+        //                 .then(() => (this.dropdownVisible = false));
+        //         })
+        //         .catch(() => {
+        //             // do nothing if no file selected
+        //         });
+        // },
+        // openDebugLog() {
+        //     vueEventDispatcher.$emit(VueEventChannels.openDebugLogRequested);
+        // },
+        // openTempFolder() {
+        //     vueEventDispatcher.$emit(VueEventChannels.openTempFolderRequested);
+        // },
+        // resetAll() {
+        //     const translations: TranslationSet = this.translations;
+        //     const userConfirmationDialogParams: UserConfirmationDialogParams = {
+        //         callback: () => {
+        //             const config: UserConfigOptions = this.config;
+        //             config.generalOptions = deepCopy(defaultGeneralOptions);
+        //             this.updateConfig();
+        //         },
+        //         message: translations.generalSettingsResetWarning,
+        //         modalTitle: translations.resetToDefault,
+        //         type: UserConfirmationDialogType.Default,
+        //     };
+        //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
+        // },
+        // resetAllSettingsToDefault() {
+        //     const translations: TranslationSet = this.translations;
+        //     const userConfirmationDialogParams: UserConfirmationDialogParams = {
+        //         callback: () => {
+        //             this.config = deepCopy(defaultUserConfigOptions);
+        //             this.updateConfig(true);
+        //             this.dropdownVisible = false;
+        //         },
+        //         message: translations.generalSettingsResetAllSettingsWarning,
+        //         modalTitle: translations.resetToDefault,
+        //         type: UserConfirmationDialogType.Error,
+        //     };
+        //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
+        // },
+        // updateConfig(needsIndexRefresh?: boolean) {
+        //     const config: UserConfigOptions = this.config;
+        //     if (config.generalOptions.rememberWindowPosition) {
+        //         config.generalOptions.showAlwaysOnPrimaryDisplay = false;
+        //     }
+        //     if (config.generalOptions.rescanIntervalInSeconds < 10) {
+        //         config.generalOptions.rescanIntervalInSeconds = 10;
+        //     }
+        //     vueEventDispatcher.$emit(VueEventChannels.configUpdated, this.config, needsIndexRefresh);
+        // },
+        // checkForUpdate() {
+        //     vueEventDispatcher.$emit(VueEventChannels.checkForUpdate);
+        // },
+        // downloadUpdate() {
+        //     vueEventDispatcher.$emit(VueEventChannels.downloadUpdate);
+        //     if (operatingSystem === OperatingSystem.Windows) {
+        //         const updateStatus: UpdateStatus = this.updateStatus;
+        //         updateStatus.checking = false;
+        //         updateStatus.downloading = true;
+        //         updateStatus.errorOnUpdateCheck = false;
+        //         updateStatus.latestVersionRunning = false;
+        //         updateStatus.updateAvailable = false;
+        //     }
+        // },
+        // changeUpdateStatus(result: UpdateCheckResult) {
+        //     const updateStatus: UpdateStatus = this.updateStatus;
+        //     if (result === UpdateCheckResult.Error) {
+        //         updateStatus.checking = false;
+        //         updateStatus.downloading = false;
+        //         updateStatus.errorOnUpdateCheck = true;
+        //         updateStatus.latestVersionRunning = false;
+        //         updateStatus.updateAvailable = false;
+        //     }
+        //     if (result === UpdateCheckResult.NoUpdateAvailable) {
+        //         updateStatus.checking = false;
+        //         updateStatus.downloading = false;
+        //         updateStatus.errorOnUpdateCheck = false;
+        //         updateStatus.latestVersionRunning = true;
+        //         updateStatus.updateAvailable = false;
+        //     }
+        //     if (result === UpdateCheckResult.UpdateAvailable) {
+        //         updateStatus.checking = false;
+        //         updateStatus.downloading = false;
+        //         updateStatus.errorOnUpdateCheck = false;
+        //         updateStatus.latestVersionRunning = false;
+        //         updateStatus.updateAvailable = true;
+        //     }
+        // },
+    },
+
+
 });
 
 
