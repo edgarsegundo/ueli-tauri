@@ -348,19 +348,21 @@
 
 <script lang="ts">
 
-import { defineComponent, inject, ref, computed, // inject, ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
+import { defineComponent, ref, computed, inject, // inject, ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
 } from 'vue';
-import { ElectronStoreConfigRepository } from '../common/config/electron-store-config-repository';
-import { defaultUserConfigOptions, UserConfigOptions } from '../common/config/user-config-options';
 import { deepCopy } from '../common/helpers/object-helpers';
 import { TranslationSet } from '../common/translation/translation-set';
-import { getTranslationSet } from '../common/translation/translation-set-manager';
 import { Language } from "../common/translation/language";
 import { GlobalHotKeyModifier } from "../common/global-hot-key/global-hot-key-modifier";
 import { GlobalHotKeyKey } from "../common/global-hot-key/global-hot-key-key";
+import { emit } from '@tauri-apps/api/event'
+import Channels from '../channels';
+import { UserConfirmationDialogParams, UserConfirmationDialogType } from './modals/user-confirmation-dialog-params';
+import { UserConfigOptions } from '../common/config/user-config-options';
 
-// import { UserConfigOptions } from "../common/config/user-config-options";
-// import { TranslationSet } from "../common/translation/translation-set";
+import { registerCallback } from '../callback-mgr';
+// import { ElectronStoreConfigRepository } from '../common/config/electron-store-config-repository';
+
 // const operatingSystem = getCurrentOperatingSystem(platform());
 // const appIsInDevelopment = isDev(process.execPath);
 
@@ -391,8 +393,8 @@ const appInfo = {
 const dropdownVisible = ref(false);
 
 // approach 2
-const config: UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
-const translations: TranslationSet | undefined = getTranslationSet(config.generalOptions.language);
+// const config: UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+// const translations: TranslationSet | undefined = getTranslationSet(config2.generalOptions.language);
 
 const globalHotKeyModifiers = computed(() =>
     Object.values(GlobalHotKeyModifier).map((modifier) => modifier)
@@ -403,23 +405,22 @@ const globalHotKeyKeys = computed(() =>
 
 const updateStatus = ref(deepCopy(initialUpdateStatus));
 
+// const callbackRef = ref(null);
+
 export default defineComponent({
     name: 'general-settings',
     setup() {
-        // approach 1
-        const translations2: TranslationSet | undefined = inject('translations');
-        console.log(translations2)
 
-        // // approach 2
-        // const config: UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
-        // const translations: TranslationSet | undefined = getTranslationSet(config.generalOptions.language);
-        
+        const config:UserConfigOptions = inject(/* key */ 'config');
+        const translations:TranslationSet = inject(/* key */ 'translations');
+
+
+
+
 
         // emit(Channels.getInstance().get("console_log_message"), {
         //     theMessage: `🦄 (-22)`,
         // })
-
-
         // const asyncFunctionGet = async () => {
 
         //     emit(Channels.getInstance().get("console_log_message"), {
@@ -447,21 +448,96 @@ export default defineComponent({
 
         // asyncFunctionGet();
 
+        const getTranslatedGlobalHotKeyModifier = (hotkeyModifier: GlobalHotKeyModifier): string => {
+            switch (hotkeyModifier) {
+                case GlobalHotKeyModifier.Alt:
+                    return translations.hotkeyModifierAlt;
+                case GlobalHotKeyModifier.AltGr:
+                    return translations.hotkeyModifierAltGr;
+                case GlobalHotKeyModifier.Command:
+                    return translations.hotkeyModifierCommand;
+                case GlobalHotKeyModifier.Control:
+                    return translations.hotkeyModifierControl;
+                case GlobalHotKeyModifier.Option:
+                    return translations.hotkeyModifierOption;
+                case GlobalHotKeyModifier.Shift:
+                    return translations.hotkeyModifierShift;
+                case GlobalHotKeyModifier.Super:
+                    return translations.hotkeyModifierSuper;
+                default:
+                    return hotkeyModifier;
+            }
+        };
 
+        const getTranslatedGlobalHotKeyKey = (hotkeyKey: GlobalHotKeyKey): string => {
+            switch (hotkeyKey) {
+                case GlobalHotKeyKey.Backspace:
+                    return translations.hotkeyKeyBackspace;
+                case GlobalHotKeyKey.Delete:
+                    return translations.hotkeyKeyDelete;
+                case GlobalHotKeyKey.Down:
+                    return translations.hotkeyKeyDown;
+                case GlobalHotKeyKey.End:
+                    return translations.hotkeyKeyEnd;
+                case GlobalHotKeyKey.Escape:
+                    return translations.hotkeyKeyEscape;
+                case GlobalHotKeyKey.Home:
+                    return translations.hotkeyKeyHome;
+                case GlobalHotKeyKey.Insert:
+                    return translations.hotkeyKeyInsert;
+                case GlobalHotKeyKey.Left:
+                    return translations.hotkeyKeyLeft;
+                case GlobalHotKeyKey.PageDown:
+                    return translations.hotkeyKeyPageDown;
+                case GlobalHotKeyKey.PageUp:
+                    return translations.hotkeyKeyPageUp;
+                case GlobalHotKeyKey.Plus:
+                    return translations.hotkeyKeyPlus;
+                case GlobalHotKeyKey.Return:
+                    return translations.hotkeyKeyReturn;
+                case GlobalHotKeyKey.Right:
+                    return translations.hotkeyKeyRight;
+                case GlobalHotKeyKey.Space:
+                    return translations.hotkeyKeySpace;
+                case GlobalHotKeyKey.Tab:
+                    return translations.hotkeyKeyTab;
+                case GlobalHotKeyKey.Up:
+                    return translations.hotkeyKeyUp;
+                default:
+                    return hotkeyKey;
+            }
+        }
+
+        const updateConfig = (needsIndexRefresh?: boolean) => {
+            if (config.generalOptions.rememberWindowPosition) {
+                config.generalOptions.showAlwaysOnPrimaryDisplay = false;
+            }
+            if (config.generalOptions.rescanIntervalInSeconds < 10) {
+                config.generalOptions.rescanIntervalInSeconds = 10;
+            }
+            console.log(needsIndexRefresh);
+            // vueEventDispatcher.$emit(VueEventChannels.configUpdated, this.config, needsIndexRefresh);
+        }
 
         // Define your methods
         const clearExecutionLog = () => {
-            // const translations: TranslationSet = this.translations;
-            
-            // const userConfirmationDialogParams: UserConfirmationDialogParams = {
-            //     callback: () => {
-            //         vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
-            //     },
-            //     message: translations.generalSettingsClearExecutionLogWarning,
-            //     modalTitle: translations.clearExecutionLog,
-            //     type: UserConfirmationDialogType.Default,
-            // };
+            const userConfirmationDialogParams: UserConfirmationDialogParams = {
+                callbackId: registerCallback('2d09aff8-7d17-4d3b-b6c7-d764fabb5c81', () => {
+                    alert("El callback está funcionando!")
+                    // vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
+                    }     
+                ),
+                message: translations.generalSettingsClearExecutionLogWarning,
+                modalTitle: translations.clearExecutionLog,
+                type: UserConfirmationDialogType.Default,
+            };
             // vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
+
+            emit(Channels.getInstance().get("settings_confirmation"), {
+                theMessage: `🦄 settings confirmation sent`,
+                params: userConfirmationDialogParams,
+            });
+
         };
 
         const dropdownTrigger = () => {
@@ -489,13 +565,14 @@ export default defineComponent({
             config,
             dropdownVisible,
             availableLanguages: Object.values(Language).map((language) => language),
-            // globalHotKeyModifiers: Object.values(GlobalHotKeyModifier).map((modifier) => modifier),
             globalHotKeyModifiers,
             globalHotKeyKeys,
-            // updateStatus: deepCopy(initialUpdateStatus),
             updateStatus,
             appInfo,
             dropdownTrigger,
+            getTranslatedGlobalHotKeyModifier,
+            getTranslatedGlobalHotKeyKey,
+            updateConfig
             // clearExecutionLog
         };
     },
@@ -543,75 +620,6 @@ export default defineComponent({
         //     dropdownVisible = !dropdownVisible;
         // },
 
-        getTranslatedGlobalHotKeyModifier(hotkeyModifier: GlobalHotKeyModifier): string {
-            // const translations: TranslationSet = this.translations;
-            switch (hotkeyModifier) {
-                case GlobalHotKeyModifier.Alt:
-                    return translations.hotkeyModifierAlt;
-                case GlobalHotKeyModifier.AltGr:
-                    return translations.hotkeyModifierAltGr;
-                case GlobalHotKeyModifier.Command:
-                    return translations.hotkeyModifierCommand;
-                case GlobalHotKeyModifier.Control:
-                    return translations.hotkeyModifierControl;
-                case GlobalHotKeyModifier.Option:
-                    return translations.hotkeyModifierOption;
-                case GlobalHotKeyModifier.Shift:
-                    return translations.hotkeyModifierShift;
-                case GlobalHotKeyModifier.Super:
-                    return translations.hotkeyModifierSuper;
-                default:
-                    return hotkeyModifier;
-            }
-        },
-        getTranslatedGlobalHotKeyKey(hotkeyKey: GlobalHotKeyKey): string {
-            switch (hotkeyKey) {
-                case GlobalHotKeyKey.Backspace:
-                    return translations.hotkeyKeyBackspace;
-                case GlobalHotKeyKey.Delete:
-                    return translations.hotkeyKeyDelete;
-                case GlobalHotKeyKey.Down:
-                    return translations.hotkeyKeyDown;
-                case GlobalHotKeyKey.End:
-                    return translations.hotkeyKeyEnd;
-                case GlobalHotKeyKey.Escape:
-                    return translations.hotkeyKeyEscape;
-                case GlobalHotKeyKey.Home:
-                    return translations.hotkeyKeyHome;
-                case GlobalHotKeyKey.Insert:
-                    return translations.hotkeyKeyInsert;
-                case GlobalHotKeyKey.Left:
-                    return translations.hotkeyKeyLeft;
-                case GlobalHotKeyKey.PageDown:
-                    return translations.hotkeyKeyPageDown;
-                case GlobalHotKeyKey.PageUp:
-                    return translations.hotkeyKeyPageUp;
-                case GlobalHotKeyKey.Plus:
-                    return translations.hotkeyKeyPlus;
-                case GlobalHotKeyKey.Return:
-                    return translations.hotkeyKeyReturn;
-                case GlobalHotKeyKey.Right:
-                    return translations.hotkeyKeyRight;
-                case GlobalHotKeyKey.Space:
-                    return translations.hotkeyKeySpace;
-                case GlobalHotKeyKey.Tab:
-                    return translations.hotkeyKeyTab;
-                case GlobalHotKeyKey.Up:
-                    return translations.hotkeyKeyUp;
-                default:
-                    return hotkeyKey;
-            }
-        },
-
-        updateConfig(needsIndexRefresh?: boolean) {
-            if (config.generalOptions.rememberWindowPosition) {
-                config.generalOptions.showAlwaysOnPrimaryDisplay = false;
-            }
-            if (config.generalOptions.rescanIntervalInSeconds < 10) {
-                config.generalOptions.rescanIntervalInSeconds = 10;
-            }
-            // vueEventDispatcher.$emit(VueEventChannels.configUpdated, this.config, needsIndexRefresh);
-        },
 
 
         // importSettings() {

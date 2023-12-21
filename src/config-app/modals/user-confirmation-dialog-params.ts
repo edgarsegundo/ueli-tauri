@@ -1,5 +1,5 @@
 export interface UserConfirmationDialogParams {
-    callback: () => void;
+    callbackId: string;
     message: string;
     modalTitle: string;
     type: UserConfirmationDialogType;

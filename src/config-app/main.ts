@@ -5,14 +5,15 @@ import Channels from '../channels';
 import { emit } from '@tauri-apps/api/event'
 import { ElectronStoreConfigRepository } from "../common/config/electron-store-config-repository";
 import { UserConfigOptions, defaultUserConfigOptions } from "../common/config/user-config-options";
-import { getTranslationSet } from "../common/translation/translation-set-manager";
 import { deepCopy } from "../common/helpers/object-helpers";
+import { getTranslationSet } from "../common/translation/translation-set-manager";
 
 const app = createApp(App);
 
-const initialConfig:UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+const config:UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
 
-app.provide(/* key */ 'translations', /* value */ getTranslationSet(initialConfig.generalOptions.language))
+app.provide(/* key */ 'config', /* value */ config);
+app.provide(/* key */ 'translations', /* value */ getTranslationSet(config.generalOptions.language));
 
 app.config.errorHandler = (err, instance, info) => {
     let error_str:string = `❌ ${err}, info: ${info}`

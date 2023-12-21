@@ -33,7 +33,7 @@
     </div>
     <div class="settings__setting">
         <GeneralSettingsComponent/>
-        <!-- <UserConfirmationComponent/> -->
+        <UserConfirmationComponent/>
         <!-- <general-settings :config="config" :translations="translations"></general-settings> -->
         <!-- <appearance-settings :config="config" :translations="translations"></appearance-settings>
         <color-theme-settings :config="config" :translations="translations"></color-theme-settings>
@@ -92,7 +92,7 @@ import { defaultUserConfigOptions } from "../common/config/user-config-options";
 
 import GeneralSettingsComponent from "./general-settings-component.vue";
 
-// import UserConfirmationComponent from "./modals/user-confirmation-component.vue"
+import UserConfirmationComponent from "./modals/user-confirmation-component.vue"
 
 const autoHideErrorMessageDelayInMilliseconds = 5000;
 let autoHideErrorMessageTimeout: number;
@@ -132,7 +132,7 @@ console.log(initialConfig)
 export default defineComponent({
     components: {
         GeneralSettingsComponent,
-        // UserConfirmationComponent
+        UserConfirmationComponent
     },
     name: 'ConfigApp',
 
