@@ -367,6 +367,8 @@ import { registerCallback } from '../callback-mgr';
 // const appIsInDevelopment = isDev(process.execPath);
 
 
+
+
 interface UpdateStatus {
     checking: boolean;
     downloading: boolean;

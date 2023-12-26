@@ -3,21 +3,25 @@
     <settings-loading-overlay></settings-loading-overlay>
     <div class="settings__sidebar menu">
         <div class="settings__sidebar-header-container">
-            <!-- <img class="settings__sidebar-header-image" src="./assets/ueli.svg"> -->
-            <!-- <span class="settings__sidebar-header-title">{{ translations.settings }}</span> -->
+            <img class="settings__sidebar-header-image" src="./assets/ueli.svg">
+            <span class="settings__sidebar-header-title">{{ translations.settings }}</span>
         </div>
         <div class="menu-label">
-            <!-- {{ translations.generalSettingsMenuSection }} -->
+            {{ translations.generalSettingsMenuSection }}
         </div>
+
         <ul class="menu-list">
-            <setting-menu-item
+            <SettingMenuItemComponent
                 v-for="generalSettingMenuItem in generalSettingMenuItems"
                 :key="generalSettingMenuItem"
                 :item="generalSettingMenuItem"
-                ></setting-menu-item>
+                :translations="translations"
+                :config="config"
+                ></SettingMenuItemComponent>
         </ul>
+
         <div class="menu-label">
-            <!-- {{ translations.pluginSettingsMenuSection }} -->
+            {{ translations.pluginSettingsMenuSection }}
         </div>
         <ul class="menu-list">
             <setting-menu-item
@@ -34,6 +38,7 @@
     <div class="settings__setting">
         <GeneralSettingsComponent/>
         <UserConfirmationComponent/>
+        <AppearanceSettingsComponent/>
         <!-- <general-settings :config="config" :translations="translations"></general-settings> -->
         <!-- <appearance-settings :config="config" :translations="translations"></appearance-settings>
         <color-theme-settings :config="config" :translations="translations"></color-theme-settings>
@@ -71,7 +76,7 @@
 <script lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import { ref, defineComponent, onMounted, computed, onUnmounted } from "vue";
+import { ref, defineComponent, onMounted, computed, onUnmounted, inject } from "vue";
 
 // import { vueEventDispatcher } from "../vue-event-dispatcher";
 // import { VueEventChannels } from "../vue-event-channels";
@@ -85,25 +90,30 @@ import { GeneralSettings } from "./general-settings";
 // import { Store } from "tauri-plugin-store-api";
 // import { emit } from '@tauri-apps/api/event'
 // import Channels from '../channels';
-import { ElectronStoreConfigRepository } from "../common/config/electron-store-config-repository";
-import { deepCopy } from "../common/helpers/object-helpers";
-import { defaultUserConfigOptions } from "../common/config/user-config-options";
+// import { ElectronStoreConfigRepository } from "../common/config/electron-store-config-repository";
+// import { deepCopy } from "../common/helpers/object-helpers";
+// import { defaultUserConfigOptions } from "../common/config/user-config-options";
 // import { getTranslationSet } from "../common/translation/translation-set-manager";
 
 import GeneralSettingsComponent from "./general-settings-component.vue";
-
 import UserConfirmationComponent from "./modals/user-confirmation-component.vue"
+import AppearanceSettingsComponent from "./appearance-settings-component.vue"
+import SettingMenuItemComponent from "./setting-menu-item-component.vue"
+
+// import { SettingMenuItemComponent } from './setting-menu-item-component.vue";
 
 const autoHideErrorMessageDelayInMilliseconds = 5000;
 let autoHideErrorMessageTimeout: number;
 
 import { UserConfigOptions } from "../common/config/user-config-options";
+import { TranslationSet } from '../common/translation/translation-set';
+
+// import { listen } from '@tauri-apps/api/event'
 
 
 
-const initialConfig:UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
-
-console.log(initialConfig)
+// const initialConfig:UserConfigOptions | null = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
+// console.log(initialConfig);
 
 // const initialConfig = new ElectronStoreConfigRepository(deepCopy(defaultUserConfigOptions)).getConfig();
 
@@ -129,10 +139,17 @@ console.log(initialConfig)
 //   }
 // }
 
+
+const generalSettingMenuItems = computed(() =>
+    Object.values(GeneralSettings).sort()
+);
+
 export default defineComponent({
     components: {
         GeneralSettingsComponent,
-        UserConfirmationComponent
+        UserConfirmationComponent,
+        AppearanceSettingsComponent,
+        SettingMenuItemComponent
     },
     name: 'ConfigApp',
 
@@ -142,8 +159,15 @@ export default defineComponent({
     // },
 
 
+    
+
+
 
     setup() {
+
+        const config:UserConfigOptions = inject(/* key */ 'config');
+        const translations:TranslationSet = inject(/* key */ 'translations');
+
 
         // provide(/* key */ 'message', /* value */ 'hello!')
         
@@ -196,7 +220,9 @@ export default defineComponent({
 //         asyncFunctionGet();
 // // ****************************************************************************
 
-        const generalSettingMenuItems = ref<string[]>(Object.values(GeneralSettings).sort());
+        // const generalSettingMenuItems = ref<string[]>(Object.values(GeneralSettings).sort());
+
+
         const notification = ref({
         message: '',
         type: undefined as NotificationType | undefined,
@@ -251,11 +277,28 @@ export default defineComponent({
         };
 
         onMounted(() => {
-        // vueEventDispatcher.$emit(VueEventChannels.showSetting, GeneralSettings.General);
 
-        // vueEventDispatcher.$on(VueEventChannels.notification, (message: string, type: NotificationType) => {
-        //   showNotification(message, type);
-        // });
+            // vueEventDispatcher.$emit(VueEventChannels.showSetting, GeneralSettings.General);
+
+            // // Register an event listener for the specified channel
+            // listen(Channels.getInstance().get('show_setting'), (event:any) => {
+            //     const params: UserConfirmationDialogParams = event.payload.params;
+            //     isActive.value = true;
+            //     message.value = params.message;
+            //     title.value = params.modalTitle;
+            //     confirmCallback.value = getCallback(params.callbackId)
+
+            //     if (params.type) {
+            //         type.value = params.type;
+            //     }
+            // });        
+
+
+
+
+            // vueEventDispatcher.$on(VueEventChannels.notification, (message: string, type: NotificationType) => {
+            //   showNotification(message, type);
+            // });
         });
 
         onUnmounted(() => {
@@ -269,6 +312,8 @@ export default defineComponent({
             pluginSettingMenuItems,
             removeNotification,
             showNotification,
+            translations,
+            config
         };
     }
 

@@ -16,6 +16,7 @@ As the project structure is already set up, you can bypass Step 1 and proceed di
 pnpm tauri dev                                  : to build and run the project
 pnpm tauri build --debug                        : build with debug option
 RUST_BACKTRACE=1 pnpm tauri build --debug       : it helps find bugs
+tools: option + comand + i
 
 3. What progress has been made thus far
 
@@ -45,6 +46,12 @@ export default {
 
 
 4. Where did I last leave off?
+
+
+-  I stopped here, see below. I'm trying to group all files related to a plugin in the folder plugin (refactoring)
+
+import { WebSearchOptions, defaultWebSearchOptions } from "./websearch-options"; // * here
+
 
 - I will refactor `loadComponentStyles` to delete and insert all other component's scripts in a better way (I need to think if this approach is efficient)
 
