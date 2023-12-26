@@ -355,12 +355,13 @@ import { TranslationSet } from '../common/translation/translation-set';
 import { Language } from "../common/translation/language";
 import { GlobalHotKeyModifier } from "../common/global-hot-key/global-hot-key-modifier";
 import { GlobalHotKeyKey } from "../common/global-hot-key/global-hot-key-key";
-import { emit } from '@tauri-apps/api/event'
+import { emit, listen } from '@tauri-apps/api/event'
 import Channels from '../channels';
 import { UserConfirmationDialogParams, UserConfirmationDialogType } from './modals/user-confirmation-dialog-params';
 import { UserConfigOptions } from '../common/config/user-config-options';
 
 import { registerCallback } from '../callback-mgr';
+import { GeneralSettings } from './general-settings';
 // import { ElectronStoreConfigRepository } from '../common/config/electron-store-config-repository';
 
 // const operatingSystem = getCurrentOperatingSystem(platform());
@@ -407,48 +408,15 @@ const globalHotKeyKeys = computed(() =>
 
 const updateStatus = ref(deepCopy(initialUpdateStatus));
 
-// const callbackRef = ref(null);
+const visible = ref(false);
+const settingName = ref(GeneralSettings.General);
+
 
 export default defineComponent({
     name: 'general-settings',
     setup() {
-
         const config:UserConfigOptions = inject(/* key */ 'config');
         const translations:TranslationSet = inject(/* key */ 'translations');
-
-
-
-
-
-        // emit(Channels.getInstance().get("console_log_message"), {
-        //     theMessage: `🦄 (-22)`,
-        // })
-        // const asyncFunctionGet = async () => {
-
-        //     emit(Channels.getInstance().get("console_log_message"), {
-        //         theMessage:  `🦄 (5)`,
-        //     })
-
-        //     const store = new Store(".settings.dat");
-        //     const appearanceOptions:UserConfigOptions | null = await store.get("appearanceOptions");
-
-        //     // const val: UserConfigOptions | null = await store.get("some-key");
-
-        //     // let value = val ? val["value"] : 0;
-            
-
-        //     emit(Channels.getInstance().get("console_log_message"), {
-        //         theMessage: `🦄 appearanceOptions: (${appearanceOptions})`,
-        //     })
-
-        //     // emit(Channels.getInstance().get("console_log_message"), {
-        //     //     theMessage:  `🦄 (99)`,
-        //     // })
-
-
-        // };
-
-        // asyncFunctionGet();
 
         const getTranslatedGlobalHotKeyModifier = (hotkeyModifier: GlobalHotKeyModifier): string => {
             switch (hotkeyModifier) {
@@ -562,7 +530,7 @@ export default defineComponent({
 
         return {
             clearExecutionLog,
-            visible: true,
+            visible,
             translations,
             config,
             dropdownVisible,
@@ -577,6 +545,38 @@ export default defineComponent({
             updateConfig
             // clearExecutionLog
         };
+    },
+
+
+        // onMounted(() => {
+
+        //     // vueEventDispatcher.$emit(VueEventChannels.showSetting, GeneralSettings.General);
+
+        //     emit(Channels.getInstance().get("show_setting"), {
+        //         settingName: GeneralSettings.General,
+        //     });
+
+
+
+    // mounted() {
+    //     vueEventDispatcher.$on(VueEventChannels.showSetting, (settingName: string) => {
+    //         if (settingName === this.settingName) {
+    //             this.visible = true;
+    //         } else {
+    //             this.visible = false;
+    //         }
+    //     });
+
+
+    mounted() {
+        listen(Channels.getInstance().get('show_setting'), (event:any) => {
+            const _settingName: string = event.payload.settingName;
+            if (_settingName === settingName.value) {
+                visible.value = true;
+            } else {
+                visible.value = false;
+            }
+        });
     },
 
 

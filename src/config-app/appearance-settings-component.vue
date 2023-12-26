@@ -348,8 +348,8 @@ export default defineComponent({
 
     mounted() {
         listen(Channels.getInstance().get('show_setting'), (event:any) => {
-            const name: string = event.payload.item;
-            if (name === settingName.value) {
+            const _settingName: string = event.payload.settingName;
+            if (_settingName === settingName.value) {
                 visible.value = true;
             } else {
                 visible.value = false;

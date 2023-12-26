@@ -107,6 +107,8 @@ let autoHideErrorMessageTimeout: number;
 
 import { UserConfigOptions } from "../common/config/user-config-options";
 import { TranslationSet } from '../common/translation/translation-set';
+import Channels from "../channels";
+import { emit } from '@tauri-apps/api/event'
 
 // import { listen } from '@tauri-apps/api/event'
 
@@ -168,115 +170,73 @@ export default defineComponent({
         const config:UserConfigOptions = inject(/* key */ 'config');
         const translations:TranslationSet = inject(/* key */ 'translations');
 
-
-        // provide(/* key */ 'message', /* value */ 'hello!')
-        
-        // const userConfig:UserConfigOptions | null = initialConfig.getConfig();
-        // let translationSet = getTranslationSet(config.generalOptions.language);
-        // alert(userConfig?.generalOptions.language)
-
-        // emit(Channels.getInstance().get("console_log_message"), {
-        //     theMessage:  `🦄 generalOptions.language: (${config.generalOptions.language})`,
-        // })
-
-        // const store = new Store(".settings.dat");
-
-        // await store.set("some-key", { value: 5 });
-
-        // const val = await store.get("some-key");
-        // // assert(val, { value: 5 });
-
-        // store.save(); // this manually saves the store, otherwise the store is only saved when your app is closed
-
-
-// // ****************************************************************************    
-            // // Assuming the data structure is something like this
-            // interface StoreData {
-            // value: number;
-            // // other properties if there are more
-            // }
-//         const store = new Store(".settings.dat");
-
-//         const asyncFunction = async () => {
-//             await store.set("some-key", { value: 99 });
-//             const val = await store.get("some-key");
-//             console.log(val);
-//             // Do something with the value
-//             store.save();
-//         };
-
-//         // Call the asynchronous function
-//         asyncFunction();
-
-//         const asyncFunctionGet = async () => {
-//             const val: StoreData | null = await store.get("some-key");
-//             console.log(val);
-//             let value = val ? val["value"] : 0;
-//             emit(Channels.getInstance().get("console_log_message"), {
-//                 theMessage:  `🦄 (3) store some-key: (${value})`,
-//             })
-//         };
-
-//         asyncFunctionGet();
-// // ****************************************************************************
-
-        // const generalSettingMenuItems = ref<string[]>(Object.values(GeneralSettings).sort());
-
-
         const notification = ref({
-        message: '',
-        type: undefined as NotificationType | undefined,
-        visible: false,
+            message: '',
+            type: undefined as NotificationType | undefined,
+            visible: false,
         });
+
         const pluginSettingMenuItems = ref<string[]>(Object.values(PluginSettings)
-        .map(setting => setting.toString())
-        .concat(
-            Object.values(SettingOsSpecific)
             .map(setting => setting.toString())
-            // .filter(setting => setting.startsWith(platform()))
-            // .map(setting => setting.replace(`${platform()}:`, '')),
-        )
-        .sort());
+            .concat(
+                Object.values(SettingOsSpecific)
+                .map(setting => setting.toString())
+                // .filter(setting => setting.startsWith(platform()))
+                // .map(setting => setting.replace(`${platform()}:`, '')),
+            )
+            .sort());
 
         const notificationClass = computed(() => {
-        let typeClass = 'is-info';
+            let typeClass = 'is-info';
 
-        const type = notification.value.type as NotificationType;
-        switch (type) {
-            case NotificationType.Error:
-            typeClass = 'is-danger';
-            break;
-            case NotificationType.Warning:
-            typeClass = 'is-warning';
-            break;
-        }
+            const type = notification.value.type as NotificationType;
+            switch (type) {
+                case NotificationType.Error:
+                typeClass = 'is-danger';
+                break;
+                case NotificationType.Warning:
+                typeClass = 'is-warning';
+                break;
+            }
 
-        return notification.value.visible ? `visible ${typeClass}` : typeClass;
-        });
+            return notification.value.visible ? `visible ${typeClass}` : typeClass;
+            });
 
-        const removeNotification = () => {
-        notification.value.visible = false;
-        };
+            const removeNotification = () => {
+                notification.value.visible = false;
+            };
 
-        const showNotification = (message: string, type: NotificationType) => {
-        if (autoHideErrorMessageTimeout) {
-            clearTimeout(autoHideErrorMessageTimeout);
-        }
+            const showNotification = (message: string, type: NotificationType) => {
+            if (autoHideErrorMessageTimeout) {
+                clearTimeout(autoHideErrorMessageTimeout);
+            }
 
-        notification.value = {
-            message,
-            type,
-            visible: true,
-        };
+            notification.value = {
+                message,
+                type,
+                visible: true,
+            };
 
-        autoHideErrorMessageTimeout = Number(
-            setTimeout(() => {
-            removeNotification();
-            }, autoHideErrorMessageDelayInMilliseconds),
-        );
+            autoHideErrorMessageTimeout = Number(
+                setTimeout(() => {
+                    removeNotification();
+                }, autoHideErrorMessageDelayInMilliseconds),
+            );
         };
 
         onMounted(() => {
+
+            // vueEventDispatcher.$emit(VueEventChannels.showSetting, GeneralSettings.General);
+
+            emit(Channels.getInstance().get("show_setting"), {
+                settingName: GeneralSettings.General,
+            });
+
+
+        // vueEventDispatcher.$on(VueEventChannels.notification, (message: string, type: NotificationType) => {
+        //     this.showNotification(message, type);
+        // });
+
 
             // vueEventDispatcher.$emit(VueEventChannels.showSetting, GeneralSettings.General);
 

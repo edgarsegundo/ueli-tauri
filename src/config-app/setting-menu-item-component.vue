@@ -180,9 +180,9 @@ export default defineComponent({
             return allPluginSettings.find((setting) => setting === item) !== undefined;
         };
 
-        const showSetting = (item: GeneralSettings) => {
+        const showSetting = (settingName: GeneralSettings) => {
             emit(Channels.getInstance().get("show_setting"), {
-                item: item,
+                settingName: settingName,
             });
 
             // vueEventDispatcher.$emit(VueEventChannels.show_setting, this.item);

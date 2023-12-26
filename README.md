@@ -261,3 +261,95 @@ https://tauri.app/v1/guides/debugging/vs-code
 I'm trying this: https://docs.rs/config/latest/config/
                  https://chat.openai.com/c/8861df89-2a6f-4c83-ad9b-9e9d88efbac5
 
+
+
+
+
+
+```ts
+        // provide(/* key */ 'message', /* value */ 'hello!')
+        
+        // const userConfig:UserConfigOptions | null = initialConfig.getConfig();
+        // let translationSet = getTranslationSet(config.generalOptions.language);
+        // alert(userConfig?.generalOptions.language)
+
+        // emit(Channels.getInstance().get("console_log_message"), {
+        //     theMessage:  `🦄 generalOptions.language: (${config.generalOptions.language})`,
+        // })
+
+        // const store = new Store(".settings.dat");
+
+        // await store.set("some-key", { value: 5 });
+
+        // const val = await store.get("some-key");
+        // // assert(val, { value: 5 });
+
+        // store.save(); // this manually saves the store, otherwise the store is only saved when your app is closed
+
+
+// // ****************************************************************************    
+            // // Assuming the data structure is something like this
+            // interface StoreData {
+            // value: number;
+            // // other properties if there are more
+            // }
+//         const store = new Store(".settings.dat");
+
+//         const asyncFunction = async () => {
+//             await store.set("some-key", { value: 99 });
+//             const val = await store.get("some-key");
+//             console.log(val);
+//             // Do something with the value
+//             store.save();
+//         };
+
+//         // Call the asynchronous function
+//         asyncFunction();
+
+//         const asyncFunctionGet = async () => {
+//             const val: StoreData | null = await store.get("some-key");
+//             console.log(val);
+//             let value = val ? val["value"] : 0;
+//             emit(Channels.getInstance().get("console_log_message"), {
+//                 theMessage:  `🦄 (3) store some-key: (${value})`,
+//             })
+//         };
+
+//         asyncFunctionGet();
+// // ****************************************************************************
+
+        // const generalSettingMenuItems = ref<string[]>(Object.values(GeneralSettings).sort());
+
+
+        // emit(Channels.getInstance().get("console_log_message"), {
+        //     theMessage: `🦄 (-22)`,
+        // })
+        // const asyncFunctionGet = async () => {
+
+        //     emit(Channels.getInstance().get("console_log_message"), {
+        //         theMessage:  `🦄 (5)`,
+        //     })
+
+        //     const store = new Store(".settings.dat");
+        //     const appearanceOptions:UserConfigOptions | null = await store.get("appearanceOptions");
+
+        //     // const val: UserConfigOptions | null = await store.get("some-key");
+
+        //     // let value = val ? val["value"] : 0;
+            
+
+        //     emit(Channels.getInstance().get("console_log_message"), {
+        //         theMessage: `🦄 appearanceOptions: (${appearanceOptions})`,
+        //     })
+
+        //     // emit(Channels.getInstance().get("console_log_message"), {
+        //     //     theMessage:  `🦄 (99)`,
+        //     // })
+
+
+        // };
+
+        // asyncFunctionGet();
+
+
+```
