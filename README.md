@@ -4,158 +4,157 @@
 
 1. I followed this [tutorial](https://tauri.app/v1/guides/getting-started/prerequisites#setting-up-macos) to create this project.
 
-As the project structure is already set up, you can bypass Step 1 and proceed directly to Step 2 by running `pnpm install` if you've just cloned this project and branch for the first time.
+    As the project structure is already set up, you can bypass Step 1 and proceed directly to Step 2 by running `pnpm install` if you've just cloned this project and branch for the first time.
 
-❯ pnpm create tauri-app
-❯ cd ueli-tauri 
-❯ pnpm install
-❯ pnpm tauri dev
+    ❯ pnpm create tauri-app
+    ❯ cd ueli-tauri 
+    ❯ pnpm install
+    ❯ pnpm tauri dev
 
 2. To build the project, look at the file `package.json`
 
-pnpm tauri dev                                  : to build and run the project
-pnpm tauri build --debug                        : build with debug option
-RUST_BACKTRACE=1 pnpm tauri build --debug       : it helps find bugs
-tools: option + comand + i
+    pnpm tauri dev                                  : to build and run the project
+    pnpm tauri build --debug                        : build with debug option
+    RUST_BACKTRACE=1 pnpm tauri build --debug       : it helps find bugs
+    tools: option + comand + i
 
 3. What progress has been made thus far
 
-- I was able to access the `UserConfigOptions`
+    - I was able to access the `UserConfigOptions`
 
-```ts
-import { UserConfigOptions } from "../common/config/user-config-options";
-        const userConfig:UserConfigOptions | null = initialConfig.getConfig();
-        alert(userConfig?.generalOptions.language)
-```
+    ```ts
+    import { UserConfigOptions } from "../common/config/user-config-options";
+            const userConfig:UserConfigOptions | null = initialConfig.getConfig();
+            alert(userConfig?.generalOptions.language)
+    ```
 
-- [I just learn how to register a child component](https://vuejs.org/guide/components/registration.html)
-```ts
-export default {
-  components: {
-    ComponentA: ComponentA
-  }
-  // ...
-}
-```
+    - [I just learn how to register a child component](https://vuejs.org/guide/components/registration.html)
+    ```ts
+    export default {
+    components: {
+        ComponentA: ComponentA
+    }
+    // ...
+    }
+    ```
 
 
-- [21-nov-2023] I implemented all described code on this [article](https://betterprogramming.pub/create-menubar-app-with-tauri-510ab7f7c43d)
-- I installed tauri for VS
-- I installed rust-analyzer for VS
-
+    - [21-nov-2023] I implemented all described code on this [article](https://betterprogramming.pub/create-menubar-app-with-tauri-510ab7f7c43d)
+    - I installed tauri for VS
+    - I installed rust-analyzer for VS
 
 4. Where did I last leave off?
 
--  I stopped here, see below. I'm trying to group all files related to a plugin in the folder plugin (refactoring)
+    -  I stopped here, see below. I'm trying to group all files related to a plugin in the folder plugin (refactoring)
 
-import { WebSearchOptions, defaultWebSearchOptions } from "./websearch-options"; // * here
+    import { WebSearchOptions, defaultWebSearchOptions } from "./websearch-options"; // * here
 
 
-- I will refactor `loadComponentStyles` to delete and insert all other component's scripts in a better way (I need to think if this approach is efficient)
+    - I will refactor `loadComponentStyles` to delete and insert all other component's scripts in a better way (I need to think if this approach is efficient)
 
-- I was trying to add a new window using tauri.conf.json, but I ended up creating it in the main.rs, but I will leave it here so I can remember how it can be done. It's important to remember why I gave on this approach and it was because I could not connect the new window the vue file, so I will continue with the approach to switch the vue component and css for now
+    - I was trying to add a new window using tauri.conf.json, but I ended up creating it in the main.rs, but I will leave it here so I can remember how it can be done. It's important to remember why I gave on this approach and it was because I could not connect the new window the vue file, so I will continue with the approach to switch the vue component and css for now
 
-How to create new window in main.rs
-```rust
-        .setup(|app| {
+    How to create new window in main.rs
+    ```rust
+            .setup(|app| {
 
-            let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
-                .fullscreen(false)
-                .resizable(false)
-                .title("User Configuration")
-                // .fullscreen(true)
-                .build();
-          
-            if let Ok(window) = result {
-                // Do something with the `window` instance, like showing it or setting its position
-                window.show().unwrap();
-                // ...
-            } else {
-                // Handle any potential errors during window creation
-                println!("Error creating second window!");
-            }
+                let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
+                    .fullscreen(false)
+                    .resizable(false)
+                    .title("User Configuration")
+                    // .fullscreen(true)
+                    .build();
+            
+                if let Ok(window) = result {
+                    // Do something with the `window` instance, like showing it or setting its position
+                    window.show().unwrap();
+                    // ...
+                } else {
+                    // Handle any potential errors during window creation
+                    println!("Error creating second window!");
+                }
 
-```
+    ```
 
-How to create new window with tauri.conf.json
-```json
-    "windows": [
-        {
+    How to create new window with tauri.conf.json
+    ```json
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": false,
+                "title": "menubar xxxx",
+                "width": 700,
+                "height": 600,
+                "visible": false,
+                "hiddenTitle": true,
+                "decorations": false,
+                "focus": false,
+                "transparent": true
+            },
+            {
             "fullscreen": false,
             "resizable": false,
-            "title": "menubar xxxx",
+            "title": "User Configuration",
             "width": 700,
-            "height": 600,
-            "visible": false,
-            "hiddenTitle": true,
+            "height": 800,
+            "visible": true,
+            "hiddenTitle": false,
             "decorations": false,
             "focus": false,
-            "transparent": true
-        },
-        {
-        "fullscreen": false,
-        "resizable": false,
-        "title": "User Configuration",
-        "width": 700,
-        "height": 800,
-        "visible": true,
-        "hiddenTitle": false,
-        "decorations": false,
-        "focus": false,
-        "transparent": false,
-        "label": "local",
-        "url": "main.html"
-        }
-    ],
-```
+            "transparent": false,
+            "label": "local",
+            "url": "main.html"
+            }
+        ],
+    ```
 
 
 
 
-I will try this: https://aptabase.com/blog/persistent-state-tauri-apps
+    I will try this: https://aptabase.com/blog/persistent-state-tauri-apps
 
-https://github.com/tauri-apps/tauri-plugin-store
+    https://github.com/tauri-apps/tauri-plugin-store
 
-electron-store-config-repository.ts
-config-repository.ts
-user-config-options.ts
-config-helpers.ts
-object-helpers.ts
+    electron-store-config-repository.ts
+    config-repository.ts
+    user-config-options.ts
+    config-helpers.ts
+    object-helpers.ts
 
-```ts
-import { Store } from "tauri-plugin-store-api";
-import { emit } from '@tauri-apps/api/event'
-import Channels from '../channels';
+    ```ts
+    import { Store } from "tauri-plugin-store-api";
+    import { emit } from '@tauri-apps/api/event'
+    import Channels from '../channels';
 
-// Assuming the data structure is something like this
-interface StoreData {
-  value: number;
-  // other properties if there are more
-}
-
-export default defineComponent({
-    setup() {
-        const store = new Store(".settings.dat");
-
-        const asyncFunction = async () => {
-            await store.set("some-key", { value: 13 });
-            const val = await store.get("some-key");
-            console.log(val);
-            store.save();
-        };
-        asyncFunction();
-
-        const asyncFunctionGet = async () => {
-        const val: StoreData | null = await store.get("some-key");
-        let value = val ? val["value"] : 0;
-        emit(Channels.getInstance().get("console_log_message"), {
-            theMessage:  `🦄 (3) store some-key: (${value})`,
-        })
-        };
-        asyncFunctionGet();
+    // Assuming the data structure is something like this
+    interface StoreData {
+    value: number;
+    // other properties if there are more
     }
-})
-```
+
+    export default defineComponent({
+        setup() {
+            const store = new Store(".settings.dat");
+
+            const asyncFunction = async () => {
+                await store.set("some-key", { value: 13 });
+                const val = await store.get("some-key");
+                console.log(val);
+                store.save();
+            };
+            asyncFunction();
+
+            const asyncFunctionGet = async () => {
+            const val: StoreData | null = await store.get("some-key");
+            let value = val ? val["value"] : 0;
+            emit(Channels.getInstance().get("console_log_message"), {
+                theMessage:  `🦄 (3) store some-key: (${value})`,
+            })
+            };
+            asyncFunctionGet();
+        }
+    })
+    ```
 
 ## Backlog
 
@@ -207,23 +206,48 @@ https://blog.notesnook.com/neutralinojs-next-best-alternative-to-electron-and-ta
 
 ## Lessons Learned
 
-### Found 2 ways of creating and using `userInputDisabled`
+1. Found 2 ways of creating and using `userInputDisabled`
+
+    ```ts
+    import { useIpcRenderer } from '@vueuse/electron'
+    // // enable nodeIntegration if you don't provide ipcRenderer explicitly
+    // // @see: https://www.electronjs.org/docs/api/webview-tag#nodeintegration
+    const ipcRenderer = useIpcRenderer()
+
+    // I could use `executionIsPending` directly in the template
+    const executionIsPending = ref(false);
+
+    // // const executionIsPending = ref(false);
+    const userInputDisabled = () => executionIsPending.value;
+
+    // this is the same as above, but with a computed property instead of a function and the difference is that the computed property is cached
+    // const userInputDisabled = computed(() => executionIsPending.value);
+    ```
+
+
+2. Create events
 
 ```ts
-import { useIpcRenderer } from '@vueuse/electron'
-// // enable nodeIntegration if you don't provide ipcRenderer explicitly
-// // @see: https://www.electronjs.org/docs/api/webview-tag#nodeintegration
-const ipcRenderer = useIpcRenderer()
-
-// I could use `executionIsPending` directly in the template
-const executionIsPending = ref(false);
-
-// // const executionIsPending = ref(false);
-const userInputDisabled = () => executionIsPending.value;
-
-// this is the same as above, but with a computed property instead of a function and the difference is that the computed property is cached
-// const userInputDisabled = computed(() => executionIsPending.value);
+    emit(Channels.getInstance().get("settings_confirmation"), {
+        theMessage: `🦄 settings confirmation sent`,
+        params: userConfirmationDialogParams,
+    });
 ```
+
+// Register an event listener for the specified channel
+listen(Channels.getInstance().get('configUpdated'), (event:any) => {
+    updateConfigAndTranslations();
+    // const params: UserConfirmationDialogParams = event.payload.params;
+    // isActive.value = true;
+    // message.value = params.message;
+    // title.value = params.modalTitle;
+    // confirmCallback.value = getCallback(params.callbackId)
+
+    // if (params.type) {
+    //     type.value = params.type;
+    // }
+});        
+
 
 ## Errors
 
