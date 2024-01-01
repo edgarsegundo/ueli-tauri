@@ -31,6 +31,34 @@ struct Payload {
 // Define a mutable option to hold the window instance
 static mut CONFIG_WINDOW: Option<Window> = None;
 
+use std::env;
+
+
+// struct Database;
+
+#[derive(serde::Serialize)]
+struct CustomResponse {
+  message: String,
+}
+
+// #[tauri::command]
+// fn get_platform() -> String {
+//     // Your logic to determine the platform, for example purposes, let's return a string
+//     if cfg!(target_os = "windows") {
+//         return "Windows".to_string();
+//     } else if cfg!(target_os = "macos") {
+//         return "MacOS".to_string();
+//     } else {
+//         return "Linux".to_string();
+//     }
+// }
+
+#[tauri::command]
+async fn get_platform() -> Result<CustomResponse, String> {
+    Ok(CustomResponse {
+        message: env::consts::OS.to_string()
+    })
+}
 
 
 fn main() {
@@ -45,7 +73,21 @@ fn main() {
         .add_item(hide)
         .add_item(quit);
 
+    println!("****** OS = {}", env::consts::OS); // Prints the current OS.
+
+    // linux
+    // macos
+    // ios
+    // freebsd
+    // dragonfly
+    // netbsd
+    // openbsd
+    // solaris
+    // android
+    // windows
+
     tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![get_platform])
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .system_tray(SystemTray::new().with_menu(system_tray_menu))

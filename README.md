@@ -20,7 +20,6 @@ tools: option + comand + i
 
 3. What progress has been made thus far
 
-
 - I was able to access the `UserConfigOptions`
 
 ```ts
@@ -46,7 +45,6 @@ export default {
 
 
 4. Where did I last leave off?
-
 
 -  I stopped here, see below. I'm trying to group all files related to a plugin in the folder plugin (refactoring)
 
@@ -185,6 +183,27 @@ Create a launch.json file and include the following configuration:
 ```
 
 ![Refer to the image for a reminder on how to initiate debugging.](debugging-on-renderer-process.png)
+
+## A Very Good Alternative to Tauri
+
+https://www.reddit.com/r/rust/comments/14g95hn/tauri_vs_flutter/
+
+## If I ever need to use NodeJs with Tauri (although not recomended)
+
+https://tauri.app/v1/guides/building/sidecar/
+https://marcin.codes/posts/tauri-+-nodejs:-alternative-to-electron/
+https://tauri.app/v1/guides/building/sidecar/
+https://github.com/marcincodes/taurine
+https://github.com/tauri-apps/tauri/discussions/7037
+https://dev.to/nothingismagick/comment/1aj99
+https://github.com/marcincodes/taurine
+https://marcin.codes/posts/tauri-+-nodejs:-alternative-to-electron/
+https://stackoverflow.com/questions/76592282/is-there-a-way-to-include-npm-packages-in-a-tauri-desktop-application
+https://aptabase.com/blog/why-chose-to-build-on-tauri-instead-electron
+https://betterprogramming.pub/tauri-vs-electron-for-tray-apps-ed15974f35ce
+https://replit.com/talk/learn/Convert-your-web-project-to-a-desktop-app-with-Tauri/143553
+https://blog.notesnook.com/neutralinojs-next-best-alternative-to-electron-and-tauri/
+
 
 ## Lessons Learned
 

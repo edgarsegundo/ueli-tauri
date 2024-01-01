@@ -291,8 +291,9 @@ import { defineComponent, ref, inject, // inject, ref, computed, onMounted, onUn
 // import { defaultAppearanceOptions } from "../common/config/appearance-options";
 import { UserConfigOptions } from "../common/config/user-config-options";
 // import { deepCopy } from "../common/helpers/object-helpers";
-// import { getCurrentOperatingSystem } from "../common/helpers/operating-system-helpers";
-// import { OperatingSystem } from "../common/operating-system";
+
+import { OperatingSystem } from "../common/operating-system";
+
 import { TranslationSet } from "../common/translation/translation-set";
 // import { VueEventChannels } from "../vue-event-channels";
 // import { vueEventDispatcher } from "../vue-event-dispatcher";
@@ -301,11 +302,22 @@ import { GeneralSettings } from "./general-settings";
 
 // import { registerCallback } from '../callback-mgr';
 
-// const operatingSystem = getCurrentOperatingSystem(platform());
+// const platform = navigator.platform;
+// console.log('Platform:', platform);
+
+
+// const platform:string = inject(/* key */ 'platform');
+// const operatingSystem = getCurrentOperatingSystem(platform);
+// console.log(platform)
+
+
+
+
 import { listen } from '@tauri-apps/api/event'
 import Channels from '../channels';
 
 const visible = ref(false);
+const isWindows = ref(undefined)
 const settingName = ref(GeneralSettings.Appearance);
 
 export default defineComponent({
@@ -313,6 +325,9 @@ export default defineComponent({
     setup() {
         const config:UserConfigOptions = inject(/* key */ 'config');
         const translations:TranslationSet = inject(/* key */ 'translations');
+        const operatingSystem:string = inject(/* key */ 'operatingSystem');
+
+        isWindows.value = operatingSystem === OperatingSystem.Windows;
 
         const resetAll = () => {
             alert("resetAll function git!")
@@ -337,7 +352,7 @@ export default defineComponent({
 
         return {
             // isWindows: operatingSystem === OperatingSystem.Windows,
-            isWindows: false,
+            isWindows,
             settingName,
             visible,
             resetAll,

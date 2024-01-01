@@ -7,6 +7,14 @@ import { ElectronStoreConfigRepository } from "../common/config/electron-store-c
 import { UserConfigOptions, defaultUserConfigOptions } from "../common/config/user-config-options";
 import { deepCopy } from "../common/helpers/object-helpers";
 import { getTranslationSet } from "../common/translation/translation-set-manager";
+import { invoke } from "@tauri-apps/api/tauri";
+import { getCurrentOperatingSystem } from "../common/helpers/operating-system-helpers";
+// import { tauri } from "@tauri-apps/api";
+
+
+// const platform = await tauri.invoke<string>('get_platform');
+
+// alert(`The platform is: ${platform}`);
 
 const app = createApp(App);
 
@@ -14,6 +22,7 @@ const config:UserConfigOptions | null = new ElectronStoreConfigRepository(deepCo
 
 app.provide(/* key */ 'config', /* value */ config);
 app.provide(/* key */ 'translations', /* value */ getTranslationSet(config.generalOptions.language));
+// app.provide(/* key */ 'platform', /* value */ 'macos');
 
 app.config.errorHandler = (err, instance, info) => {
     let error_str:string = `❌ ${err}, info: ${info}`
@@ -38,6 +47,40 @@ window.onerror = function (message, source, lineno, colno, error) {
 };
 
 window.addEventListener('unhandledrejection', event => console.error('Unhandled Promise Rejection:', event.reason));
+
+
+app.provide(/* key */ 'platform', /* value */ "macos");
+invoke('get_platform', {})
+.then((res:any) => {
+        app.provide(/* key */ 'operatingSystem', /* value */ getCurrentOperatingSystem(res.message));
+    }
+)
+.catch((e) => console.error(e))
+
+
+// // Asynchronous function to fetch platform information
+// async function fetchPlatformInfo() {
+//     try {
+//         await Channels.getInstance().fetchJsonData();
+
+//         alert("edgar 1")
+
+//         const res:any = await invoke('get_platform', {})
+
+//         alert("a = " + res.message)
+
+//         app.provide(/* key */ 'platform', /* value */ res.message);
+
+//         app.mount('#app');
+//     } catch (error) {
+//         emit("error_occurred", {
+//             theMessage: error,
+//         })
+//     }
+// }
+
+// // Fetch platform information before mounting the app
+// fetchPlatformInfo();
 
 Channels.getInstance().fetchJsonData().then(() => {
     app.mount('#app');

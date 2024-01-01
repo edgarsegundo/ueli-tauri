@@ -2,9 +2,9 @@ import { OperatingSystem, OperatingSystemVersion } from "../operating-system";
 
 export function getCurrentOperatingSystem(platform: string): OperatingSystem {
     switch (platform) {
-        case "win32":
+        case "windows":
             return OperatingSystem.Windows;
-        case "darwin":
+        case "macos":
             return OperatingSystem.macOS;
         default:
             throw new Error(`Platform "${platform}" is not supported`);
