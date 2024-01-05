@@ -2,7 +2,7 @@
 <div v-if="visible">
     <div class="settings__setting-title title is-3">
         <span>
-            {{ translations.appearanceSettings }}
+            {{ appState.translations.appearanceSettings }}
         </span>
         <button class="button" @click="resetAll">
             <span class="icon"><i class="fas fa-undo-alt"></i></span>
@@ -14,27 +14,27 @@
 
                 <div class="settings__setting-content-item-title mb-4">
                     <div class="title is-5">
-                        {{ translations.settingsGeneralTitle }}
+                        {{ appState.translations.settingsGeneralTitle }}
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsWindowWidth }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsWindowWidth }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" step="1" class="input" v-model="config.appearanceOptions.windowWidth" @change="updateConfig">
+                                <input type="number" step="1" class="input" v-model="appState.config.appearanceOptions.windowWidth" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsSmoothScrolling }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsSmoothScrolling }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="smoothScrollingCheckBox" type="checkbox" name="smoothScrollingCheckBox" class="switch is-rounded is-success" checked="checked" v-model="config.appearanceOptions.smoothScrolling" @change="updateConfig">
+                                <input id="smoothScrollingCheckBox" type="checkbox" name="smoothScrollingCheckBox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.appearanceOptions.smoothScrolling" @change="updateConfig">
                                 <label for="smoothScrollingCheckBox"></label>
                             </div>
                         </div>
@@ -42,11 +42,11 @@
                 </div>
 
                 <div class="settings__option" v-if="isWindows">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsAllowTransparentBackground }} ({{ translations.restartRequired }})</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsAllowTransparentBackground }} ({{ appState.translations.restartRequired }})</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="allowTransparentBackgroundCheckbox" type="checkbox" name="allowTransparentBackgroundCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.appearanceOptions.allowTransparentBackground" @change="updateConfig">
+                                <input id="allowTransparentBackgroundCheckbox" type="checkbox" name="allowTransparentBackgroundCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.appearanceOptions.allowTransparentBackground" @change="updateConfig">
                                 <label for="allowTransparentBackgroundCheckbox"></label>
                             </div>
                         </div>
@@ -54,11 +54,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsFontFamily }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsFontFamily }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="text" class="input" v-model="config.appearanceOptions.fontFamily" @change="updateConfig">
+                                <input type="text" class="input" v-model="appState.config.appearanceOptions.fontFamily" @change="updateConfig">
                             </div>
                         </div>
                     </div>
@@ -71,52 +71,52 @@
             <div class="settings__options-container">
                 <div class="settings__setting-content-item-title mb-4">
                     <div class="title is-5">
-                        {{ translations.settingsUserInputTitle }}
+                        {{ appState.translations.settingsUserInputTitle }}
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsUserInputHeight }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsUserInputHeight }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" step="1" class="input" v-model="config.appearanceOptions.userInputHeight" @change="updateConfig">
+                                <input type="number" step="1" class="input" v-model="appState.config.appearanceOptions.userInputHeight" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsUserInputBorderRadius }}</div>
-                        <span class="icon tooltip is-tooltip-multiline" :data-tooltip="translations.appearanceSettingsBorderRadiusDescription">
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsUserInputBorderRadius }}</div>
+                        <span class="icon tooltip is-tooltip-multiline" :data-tooltip="appState.translations.appearanceSettingsBorderRadiusDescription">
                             <i class="fa fa-info-circle"></i>
                         </span>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="text" class="input" v-model="config.appearanceOptions.userInputBorderRadius" @change="updateConfig">
+                                <input type="text" class="input" v-model="appState.config.appearanceOptions.userInputBorderRadius" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsUserInputBottomMargin }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsUserInputBottomMargin }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" step="1" class="input" v-model="config.appearanceOptions.userInputBottomMargin" @change="updateConfig">
+                                <input type="number" step="1" class="input" v-model="appState.config.appearanceOptions.userInputBottomMargin" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsShowSearchIcon }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsShowSearchIcon }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="showSearchIconCheckbox" type="checkbox" name="showSearchIconCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.appearanceOptions.showSearchIcon" @change="updateConfig">
+                                <input id="showSearchIconCheckbox" type="checkbox" name="showSearchIconCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.appearanceOptions.showSearchIcon" @change="updateConfig">
                                 <label for="showSearchIconCheckbox"></label>
                             </div>
                         </div>
@@ -124,22 +124,22 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsUserInputFontSize }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsUserInputFontSize }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="text" class="input" v-model="config.appearanceOptions.userInputFontSize" @change="updateConfig">
+                                <input type="text" class="input" v-model="appState.config.appearanceOptions.userInputFontSize" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsUserInputFontWeight }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsUserInputFontWeight }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" class="input" v-model="config.appearanceOptions.userInputFontWeight" @change="updateConfig">
+                                <input type="number" class="input" v-model="appState.config.appearanceOptions.userInputFontWeight" @change="updateConfig">
                             </div>
                         </div>
                     </div>
@@ -152,66 +152,66 @@
             <div class="settings__options-container">
                 <div class="settings__setting-content-item-title mb-4">
                     <div class="title is-5">
-                        {{ translations.settingsSearchResultsBoxTitle }}
+                        {{ appState.translations.settingsSearchResultsBoxTitle }}
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsSearchResultHeight }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsSearchResultHeight }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" step="1" class="input" v-model="config.appearanceOptions.searchResultHeight" @change="updateConfig">
+                                <input type="number" step="1" class="input" v-model="appState.config.appearanceOptions.searchResultHeight" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsMaxSearchResultsPerPage }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsMaxSearchResultsPerPage }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" step="1" class="input" v-model="config.appearanceOptions.maxSearchResultsPerPage" @change="updateConfig">
+                                <input type="number" step="1" class="input" v-model="appState.config.appearanceOptions.maxSearchResultsPerPage" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsSearchResultsBorderRadius }}</div>
-                    <span class="icon tooltip is-tooltip-multiline" :data-tooltip="translations.appearanceSettingsBorderRadiusDescription">
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsSearchResultsBorderRadius }}</div>
+                    <span class="icon tooltip is-tooltip-multiline" :data-tooltip="appState.translations.appearanceSettingsBorderRadiusDescription">
                             <i class="fa fa-info-circle"></i>
                         </span>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="text" class="input" v-model="config.appearanceOptions.searchResultsBorderRadius" @change="updateConfig">
+                                <input type="text" class="input" v-model="appState.config.appearanceOptions.searchResultsBorderRadius" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsScrollbarBorderRadius }}</div>
-                    <span class="icon tooltip is-tooltip-multiline" :data-tooltip="translations.appearanceSettingsBorderRadiusDescription">
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsScrollbarBorderRadius }}</div>
+                    <span class="icon tooltip is-tooltip-multiline" :data-tooltip="appState.translations.appearanceSettingsBorderRadiusDescription">
                             <i class="fa fa-info-circle"></i>
                         </span>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="text" class="input" v-model="config.appearanceOptions.scrollbarBorderRadius" @change="updateConfig">
+                                <input type="text" class="input" v-model="appState.config.appearanceOptions.scrollbarBorderRadius" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsShowDescriptionOnAllSearchResults }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsShowDescriptionOnAllSearchResults }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="showDescriptionOnAllSearchResults" type="checkbox" name="showDescriptionOnAllSearchResults" class="switch is-rounded is-success" checked="checked" v-model="config.appearanceOptions.showDescriptionOnAllSearchResults" @change="updateConfig">
+                                <input id="showDescriptionOnAllSearchResults" type="checkbox" name="showDescriptionOnAllSearchResults" class="switch is-rounded is-success" checked="checked" v-model="appState.config.appearanceOptions.showDescriptionOnAllSearchResults" @change="updateConfig">
                                 <label for="showDescriptionOnAllSearchResults"></label>
                             </div>
                         </div>
@@ -219,11 +219,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsShowSearchResultNumbers }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsShowSearchResultNumbers }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="showSearchResultNumbersCheckbox" type="checkbox" name="showSearchResultNumbersCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.appearanceOptions.showSearchResultNumbers" @change="updateConfig">
+                                <input id="showSearchResultNumbersCheckbox" type="checkbox" name="showSearchResultNumbersCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.appearanceOptions.showSearchResultNumbers" @change="updateConfig">
                                 <label for="showSearchResultNumbersCheckbox"></label>
                             </div>
                         </div>
@@ -231,44 +231,44 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsSearchResultDescriptionFontSize }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsSearchResultDescriptionFontSize }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="text" class="input" v-model="config.appearanceOptions.searchResultNameFontSize" @change="updateConfig">
+                                <input type="text" class="input" v-model="appState.config.appearanceOptions.searchResultNameFontSize" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsSearchResultNameFontWeight }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsSearchResultNameFontWeight }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" class="input" v-model="config.appearanceOptions.searchResultNameFontWeight" @change="updateConfig">
+                                <input type="number" class="input" v-model="appState.config.appearanceOptions.searchResultNameFontWeight" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsSearchResultNameFontSize }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsSearchResultNameFontSize }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="text" class="input" v-model="config.appearanceOptions.searchResultDescriptionFontSize" @change="updateConfig">
+                                <input type="text" class="input" v-model="appState.config.appearanceOptions.searchResultDescriptionFontSize" @change="updateConfig">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.appearanceSettingsSearchResultDescriptionFontWeight }}</div>
+                    <div class="settings__option-name">{{ appState.translations.appearanceSettingsSearchResultDescriptionFontWeight }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input type="number" class="input" v-model="config.appearanceOptions.searchResultDescriptionFontWeight" @change="updateConfig">
+                                <input type="number" class="input" v-model="appState.config.appearanceOptions.searchResultDescriptionFontWeight" @change="updateConfig">
                             </div>
                         </div>
                     </div>
@@ -289,12 +289,12 @@ import { defineComponent, ref, inject, // inject, ref, computed, onMounted, onUn
 // import { platform } from "os";
 
 // import { defaultAppearanceOptions } from "../common/config/appearance-options";
-import { UserConfigOptions } from "../common/config/user-config-options";
+// import { UserConfigOptions } from "../common/config/user-config-options";
 // import { deepCopy } from "../common/helpers/object-helpers";
 
 import { OperatingSystem } from "../common/operating-system";
 
-import { TranslationSet } from "../common/translation/translation-set";
+// import { TranslationSet } from "../common/translation/translation-set";
 // import { VueEventChannels } from "../vue-event-channels";
 // import { vueEventDispatcher } from "../vue-event-dispatcher";
 import { GeneralSettings } from "./general-settings";
@@ -323,9 +323,13 @@ const settingName = ref(GeneralSettings.Appearance);
 export default defineComponent({
     name: 'general-settings',
     setup() {
-        const config:UserConfigOptions = inject(/* key */ 'config');
-        const translations:TranslationSet = inject(/* key */ 'translations');
+        // const config:UserConfigOptions = inject(/* key */ 'config');
+        // const translations:TranslationSet = inject(/* key */ 'translations');
         const operatingSystem:string = inject(/* key */ 'operatingSystem');
+
+        const appState:any = inject(/* key */ 'appState');
+        // const config:UserConfigOptions = reactiveAppState.config;
+        // const translations:TranslationSet = reactiveAppState.translations;
 
         isWindows.value = operatingSystem === OperatingSystem.Windows;
 
@@ -337,8 +341,8 @@ export default defineComponent({
             //         // vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
             //         }     
             //     ),
-            //     message: translations.generalSettingsClearExecutionLogWarning,
-            //     modalTitle: translations.clearExecutionLog,
+            //     message: appState.translations.generalSettingsClearExecutionLogWarning,
+            //     modalTitle: appState.translations.clearExecutionLog,
             //     type: UserConfirmationDialogType.Default,
             // };
             // // vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -356,8 +360,9 @@ export default defineComponent({
             settingName,
             visible,
             resetAll,
-            translations,
-            config
+            appState
+            // translations,
+            // config
         };
     },
 
@@ -390,7 +395,7 @@ export default defineComponent({
 //                     config.appearanceOptions = deepCopy(defaultAppearanceOptions);
 //                     this.updateConfig();
 //                 },
-//                 message: translations.appearanceSettingsResetWarningMessage,
+//                 message: appState.translations.appearanceSettingsResetWarningMessage,
 //                 modalTitle: translations.resetToDefault,
 //                 type: UserConfirmationDialogType.Default,
 //             };

@@ -12,8 +12,8 @@
                     {{ message }}
                 </div>
                 <div class="field has-text-centered">
-                    <button class="button is-success" @click="onConfirm">{{ translations.yes }}</button>
-                    <button class="button is-danger" @click="onDeny">{{ translations.no }}</button>
+                    <button class="button is-success" @click="onConfirm">{{ appState.translations.yes }}</button>
+                    <button class="button is-danger" @click="onDeny">{{ appState.translations.no }}</button>
                 </div>
             </div>
         </div>
@@ -30,8 +30,8 @@ import { defineComponent, ref, inject, // ref, inject, ref, computed, onMounted,
 import { listen } from '@tauri-apps/api/event'
 import Channels from '../../channels';
 import { UserConfirmationDialogParams, UserConfirmationDialogType } from "./user-confirmation-dialog-params";  // UserConfirmationDialogParams
-import { UserConfigOptions } from '../../common/config/user-config-options';
-import { TranslationSet } from '../../common/translation/translation-set';
+// import { UserConfigOptions } from '../../common/config/user-config-options';
+// import { TranslationSet } from '../../common/translation/translation-set';
 
 import { getCallback } from '../../callback-mgr'
 
@@ -45,16 +45,21 @@ const type = ref(UserConfirmationDialogType.Default)
 export default defineComponent({
     name: 'user-confirmation',
     setup() {
-        const config:UserConfigOptions = inject(/* key */ 'config');
-        const translations:TranslationSet = inject(/* key */ 'translations');
+        // const config:UserConfigOptions = inject(/* key */ 'config');
+        // const translations:TranslationSet = inject(/* key */ 'translations');
+
+        const appState:any = inject(/* key */ 'appState');
+        // const config:UserConfigOptions = reactiveAppState.config;
+        // const translations:TranslationSet = reactiveAppState.translations;
 
         return {
             isActive,
             message,
             title,
             type,
-            config,
-            translations
+            appState
+            // config,
+            // translations
         };
     },
     methods: {

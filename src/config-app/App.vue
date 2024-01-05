@@ -4,10 +4,10 @@
     <div class="settings__sidebar menu">
         <div class="settings__sidebar-header-container">
             <img class="settings__sidebar-header-image" src="./assets/ueli.svg">
-            <span class="settings__sidebar-header-title">{{ translations.settings }}</span>
+            <span class="settings__sidebar-header-title">{{ appState.translations.settings }}</span>
         </div>
         <div class="menu-label">
-            {{ translations.generalSettingsMenuSection }}
+            {{ appState.translations.generalSettingsMenuSection }}
         </div>
 
         <ul class="menu-list">
@@ -21,7 +21,7 @@
         </ul>
 
         <div class="menu-label">
-            {{ translations.pluginSettingsMenuSection }}
+            {{ appState.translations.pluginSettingsMenuSection }}
         </div>
         <ul class="menu-list">
             <setting-menu-item
@@ -105,8 +105,8 @@ import SettingMenuItemComponent from "./setting-menu-item-component.vue"
 const autoHideErrorMessageDelayInMilliseconds = 5000;
 let autoHideErrorMessageTimeout: number;
 
-import { UserConfigOptions } from "../common/config/user-config-options";
-import { TranslationSet } from '../common/translation/translation-set';
+// import { UserConfigOptions } from "../common/config/user-config-options";
+// import { TranslationSet } from '../common/translation/translation-set';
 import Channels from "../channels";
 import { emit } from '@tauri-apps/api/event'
 
@@ -166,9 +166,13 @@ export default defineComponent({
 
 
     setup() {
+        // const config:UserConfigOptions = inject(/* key */ 'config');
+        // const translations:TranslationSet = inject(/* key */ 'translations');
 
-        const config:UserConfigOptions = inject(/* key */ 'config');
-        const translations:TranslationSet = inject(/* key */ 'translations');
+        const appState:any = inject(/* key */ 'appState');
+        // const config:UserConfigOptions = reactiveAppState.config;
+        // const translations:TranslationSet = reactiveAppState.translations;
+
 
         const notification = ref({
             message: '',
@@ -272,8 +276,9 @@ export default defineComponent({
             pluginSettingMenuItems,
             removeNotification,
             showNotification,
-            translations,
-            config
+            appState
+            // translations,
+            // config
         };
     }
 

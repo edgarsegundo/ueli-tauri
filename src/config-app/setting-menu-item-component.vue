@@ -21,74 +21,79 @@ import { defineComponent, ref, inject,
 } from 'vue';
 import { PluginSettings } from "./plugin-settings";
 import { SettingOsSpecific } from "./settings-os-specific";
-import { TranslationSet } from "../common/translation/translation-set";
+// import { TranslationSet } from "../common/translation/translation-set";
 import { GeneralSettings } from "./general-settings";
-import { UserConfigOptions } from "../common/config/user-config-options";
+// import { UserConfigOptions } from "../common/config/user-config-options";
 import { emit } from '@tauri-apps/api/event'
 import Channels from '../channels';
 
 export default defineComponent({
     name: 'setting-meny-item',
     setup() {
-        const config:UserConfigOptions = inject(/* key */ 'config');
-        const translations:TranslationSet = inject(/* key */ 'translations');
+        // const config:UserConfigOptions = inject(/* key */ 'config');
+        // const translations:TranslationSet = inject(/* key */ 'translations');
+
+        const appState:any = inject(/* key */ 'appState');
+        // const config:UserConfigOptions = reactiveAppState.config;
+        // const translations:TranslationSet = reactiveAppState.translations;
+
         const isActive = ref(false)
 
         const getItemName = (item: GeneralSettings | PluginSettings | SettingOsSpecific) => {
             switch (item) {
                 case GeneralSettings.Appearance:
-                    return translations.appearanceSettings;
+                    return appState.translations.appearanceSettings;
                 case GeneralSettings.General:
-                    return translations.generalSettings;
+                    return appState.translations.generalSettings;
                 case GeneralSettings.SearchEngine:
-                    return translations.searchEngineSettings;
+                    return appState.translations.searchEngineSettings;
                 case PluginSettings.ApplicationSearch:
-                    return translations.applicationSearchSettings;
+                    return appState.translations.applicationSearchSettings;
                 case PluginSettings.BrowserBookmarks:
-                    return translations.browserBookmarks;
+                    return appState.translations.browserBookmarks;
                 case PluginSettings.Calculator:
-                    return translations.calcuator;
+                    return appState.translations.calcuator;
                 case PluginSettings.ColorConverter:
-                    return translations.colorConverter;
+                    return appState.translations.colorConverter;
                 case GeneralSettings.ColorTheme:
-                    return translations.colorThemeSettings;
+                    return appState.translations.colorThemeSettings;
                 case PluginSettings.CurrencyConverter:
-                    return translations.currencyConverter;
+                    return appState.translations.currencyConverter;
                 case PluginSettings.Commandline:
-                    return translations.commandline;
+                    return appState.translations.commandline;
                 case PluginSettings.Dictionary:
-                    return translations.dictionary;
+                    return appState.translations.dictionary;
                 case PluginSettings.Email:
-                    return translations.email;
+                    return appState.translations.email;
                 case PluginSettings.FileBrowser:
-                    return translations.fileBrowser;
+                    return appState.translations.fileBrowser;
                 case PluginSettings.OperatingSystemCommands:
-                    return translations.operatingSystemCommands;
+                    return appState.translations.operatingSystemCommands;
                 case PluginSettings.OperatingSystemSettings:
-                    return translations.operatingSystemSettings;
+                    return appState.translations.operatingSystemSettings;
                 case PluginSettings.Shortcuts:
-                    return translations.shortcutSettings;
+                    return appState.translations.shortcutSettings;
                 case PluginSettings.SimpleFolderSearch:
-                    return translations.simpleFolderSearch;
+                    return appState.translations.simpleFolderSearch;
                 case PluginSettings.Translation:
-                    return translations.translationSettingsTranslation;
+                    return appState.translations.translationSettingsTranslation;
                 case PluginSettings.Url:
-                    return translations.url;
+                    return appState.translations.url;
                 case PluginSettings.Weather:
-                    return translations.weather;
+                    return appState.translations.weather;
                 case PluginSettings.WebSearch:
-                    return translations.websearch;
+                    return appState.translations.websearch;
                 case PluginSettings.Workflow:
-                    return translations.workflows;
+                    return appState.translations.workflows;
                 // case SettingOsSpecific.ControlPanel.replace(`${platform()}:`, ""):
                 case SettingOsSpecific.ControlPanel.replace(`darwin:`, ""):
-                    return translations.controlPanel;
+                    return appState.translations.controlPanel;
                 // case SettingOsSpecific.Everything.replace(`${platform()}:`, ""):
                 case SettingOsSpecific.Everything.replace(`darwin:`, ""):                    
-                    return translations.everythingSearch;
+                    return appState.translations.everythingSearch;
                 // case SettingOsSpecific.MdFind.replace(`${platform()}:`, ""):
                 case SettingOsSpecific.MdFind.replace(`darwin`, ""):                    
-                    return translations.mdfindSearch;
+                    return appState.translations.mdfindSearch;
                 // case SettingOsSpecific.Uwp.replace(`${platform()}:`, ""):
                 case SettingOsSpecific.Uwp.replace(`darwin`, ""):                    
                     return "UWP";
@@ -116,55 +121,55 @@ export default defineComponent({
         const isEnabled = (item: GeneralSettings | PluginSettings | SettingOsSpecific): boolean => {
             switch (item) {
                 case PluginSettings.ApplicationSearch:
-                    return config.applicationSearchOptions.enabled;
+                    return appState.config.applicationSearchOptions.enabled;
                 case PluginSettings.BrowserBookmarks:
-                    return config.browserBookmarksOptions.isEnabled;
+                    return appState.config.browserBookmarksOptions.isEnabled;
                 case PluginSettings.Calculator:
-                    return config.calculatorOptions.isEnabled;
+                    return appState.config.calculatorOptions.isEnabled;
                 case PluginSettings.ColorConverter:
-                    return config.colorConverterOptions.isEnabled;
+                    return appState.config.colorConverterOptions.isEnabled;
                 case PluginSettings.Commandline:
-                    return config.commandlineOptions.isEnabled;
+                    return appState.config.commandlineOptions.isEnabled;
                 case PluginSettings.CurrencyConverter:
-                    return config.currencyConverterOptions.isEnabled;
+                    return appState.config.currencyConverterOptions.isEnabled;
                 case PluginSettings.Dictionary:
-                    return config.dictionaryOptions.isEnabled;
+                    return appState.config.dictionaryOptions.isEnabled;
                 case PluginSettings.Email:
-                    return config.emailOptions.isEnabled;
+                    return appState.config.emailOptions.isEnabled;
                 case PluginSettings.FileBrowser:
-                    return config.fileBrowserOptions.isEnabled;
+                    return appState.config.fileBrowserOptions.isEnabled;
                 case PluginSettings.OperatingSystemCommands:
-                    return config.operatingSystemCommandsOptions.isEnabled;
+                    return appState.config.operatingSystemCommandsOptions.isEnabled;
                 case PluginSettings.OperatingSystemSettings:
-                    return config.operatingSystemSettingsOptions.isEnabled;
+                    return appState.config.operatingSystemSettingsOptions.isEnabled;
                 case PluginSettings.Shortcuts:
-                    return config.shortcutOptions.isEnabled;
+                    return appState.config.shortcutOptions.isEnabled;
                 case PluginSettings.SimpleFolderSearch:
-                    return config.simpleFolderSearchOptions.isEnabled;
+                    return appState.config.simpleFolderSearchOptions.isEnabled;
                 case PluginSettings.Translation:
-                    return config.translationOptions.enabled;
+                    return appState.config.translationOptions.enabled;
                 case PluginSettings.Url:
-                    return config.urlOptions.isEnabled;
+                    return appState.config.urlOptions.isEnabled;
                 case PluginSettings.Weather:
-                    return config.weatherOptions.isEnabled;
+                    return appState.config.weatherOptions.isEnabled;
                 case PluginSettings.LoremIpsum:
-                    return config.loremIpsumOptions.isEnabled;
+                    return appState.config.loremIpsumOptions.isEnabled;
                 case PluginSettings.WebSearch:
-                    return config.websearchOptions.isEnabled;
+                    return appState.config.websearchOptions.isEnabled;
                 case PluginSettings.Workflow:
-                    return config.workflowOptions.isEnabled;
+                    return appState.config.workflowOptions.isEnabled;
                 case SettingOsSpecific.ControlPanel.replace(`darwin:`, ""):
                 // case SettingOsSpecific.ControlPanel.replace(`${platform()}:`, ""):
-                    return config.controlPanelOptions.isEnabled;
+                    return appState.config.controlPanelOptions.isEnabled;
                 case SettingOsSpecific.Everything.replace(`darwin:`, ""):
                 // case SettingOsSpecific.Everything.replace(`${platform()}:`, ""):
-                    return config.everythingSearchOptions.enabled;
+                    return appState.config.everythingSearchOptions.enabled;
                 case SettingOsSpecific.MdFind.replace(`darwin:`, ""):
                 // case SettingOsSpecific.MdFind.replace(`${platform()}:`, ""):
-                    return config.mdfindOptions.enabled;
+                    return appState.config.mdfindOptions.enabled;
                 case SettingOsSpecific.Uwp.replace(`darwin:`, ""):
                 // case SettingOsSpecific.Uwp.replace(`${platform()}:`, ""):
-                    return config.uwpSearchOptions.isEnabled;
+                    return appState.config.uwpSearchOptions.isEnabled;
                 default:
                     return false;
             }
@@ -190,13 +195,14 @@ export default defineComponent({
 
         return {
             isActive,
-            translations,
-            config,
+            // translations,
+            // config,
             getItemName,
             getItemIcon,
             isEnabled,
             isPluginSetting,
             showSetting,
+            appState
         };
     },
     mounted() {

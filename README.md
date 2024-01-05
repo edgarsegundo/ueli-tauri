@@ -45,116 +45,18 @@
 
 4. Where did I last leave off?
 
-    -  I stopped here, see below. I'm trying to group all files related to a plugin in the folder plugin (refactoring)
+    I need to capture the error from the saveConfig because when I exit the application, the file `.ueli-settings.dat` is probably keeping open and an error is happening and the data is not being saved
 
-    import { WebSearchOptions, defaultWebSearchOptions } from "./websearch-options"; // * here
-
-
-    - I will refactor `loadComponentStyles` to delete and insert all other component's scripts in a better way (I need to think if this approach is efficient)
-
-    - I was trying to add a new window using tauri.conf.json, but I ended up creating it in the main.rs, but I will leave it here so I can remember how it can be done. It's important to remember why I gave on this approach and it was because I could not connect the new window the vue file, so I will continue with the approach to switch the vue component and css for now
-
-    How to create new window in main.rs
-    ```rust
-            .setup(|app| {
-
-                let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
-                    .fullscreen(false)
-                    .resizable(false)
-                    .title("User Configuration")
-                    // .fullscreen(true)
-                    .build();
-            
-                if let Ok(window) = result {
-                    // Do something with the `window` instance, like showing it or setting its position
-                    window.show().unwrap();
-                    // ...
-                } else {
-                    // Handle any potential errors during window creation
-                    println!("Error creating second window!");
-                }
-
-    ```
-
-    How to create new window with tauri.conf.json
-    ```json
-        "windows": [
-            {
-                "fullscreen": false,
-                "resizable": false,
-                "title": "menubar xxxx",
-                "width": 700,
-                "height": 600,
-                "visible": false,
-                "hiddenTitle": true,
-                "decorations": false,
-                "focus": false,
-                "transparent": true
-            },
-            {
-            "fullscreen": false,
-            "resizable": false,
-            "title": "User Configuration",
-            "width": 700,
-            "height": 800,
-            "visible": true,
-            "hiddenTitle": false,
-            "decorations": false,
-            "focus": false,
-            "transparent": false,
-            "label": "local",
-            "url": "main.html"
-            }
-        ],
-    ```
-
-
-
-
-    I will try this: https://aptabase.com/blog/persistent-state-tauri-apps
-
-    https://github.com/tauri-apps/tauri-plugin-store
-
-    electron-store-config-repository.ts
-    config-repository.ts
-    user-config-options.ts
-    config-helpers.ts
-    object-helpers.ts
-
-    ```ts
-    import { Store } from "tauri-plugin-store-api";
-    import { emit } from '@tauri-apps/api/event'
-    import Channels from '../channels';
-
-    // Assuming the data structure is something like this
-    interface StoreData {
-    value: number;
-    // other properties if there are more
+    public saveConfig(updatedConfig: UserConfigOptions): Promise<void> {
+        return new Promise((resolve) => {
+            // alert(updatedConfig.generalOptions.language);
+            this.store.set(this.configStoreKey, updatedConfig);
+            this.store.save();
+            resolve();
+        });
     }
 
-    export default defineComponent({
-        setup() {
-            const store = new Store(".settings.dat");
 
-            const asyncFunction = async () => {
-                await store.set("some-key", { value: 13 });
-                const val = await store.get("some-key");
-                console.log(val);
-                store.save();
-            };
-            asyncFunction();
-
-            const asyncFunctionGet = async () => {
-            const val: StoreData | null = await store.get("some-key");
-            let value = val ? val["value"] : 0;
-            emit(Channels.getInstance().get("console_log_message"), {
-                theMessage:  `🦄 (3) store some-key: (${value})`,
-            })
-            };
-            asyncFunctionGet();
-        }
-    })
-    ```
 
 ## Backlog
 
@@ -396,3 +298,115 @@ I'm trying this: https://docs.rs/config/latest/config/
 
 
 ```
+
+
+    -  I stopped here, see below. I'm trying to group all files related to a plugin in the folder plugin (refactoring)
+
+    import { WebSearchOptions, defaultWebSearchOptions } from "./websearch-options"; // * here
+
+
+    - I will refactor `loadComponentStyles` to delete and insert all other component's scripts in a better way (I need to think if this approach is efficient)
+
+    - I was trying to add a new window using tauri.conf.json, but I ended up creating it in the main.rs, but I will leave it here so I can remember how it can be done. It's important to remember why I gave on this approach and it was because I could not connect the new window the vue file, so I will continue with the approach to switch the vue component and css for now
+
+    How to create new window in main.rs
+    ```rust
+            .setup(|app| {
+
+                let result = WindowBuilder::new(app, "local", WindowUrl::App("config.html".into()))
+                    .fullscreen(false)
+                    .resizable(false)
+                    .title("User Configuration")
+                    // .fullscreen(true)
+                    .build();
+            
+                if let Ok(window) = result {
+                    // Do something with the `window` instance, like showing it or setting its position
+                    window.show().unwrap();
+                    // ...
+                } else {
+                    // Handle any potential errors during window creation
+                    println!("Error creating second window!");
+                }
+
+    ```
+
+    How to create new window with tauri.conf.json
+    ```json
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": false,
+                "title": "menubar xxxx",
+                "width": 700,
+                "height": 600,
+                "visible": false,
+                "hiddenTitle": true,
+                "decorations": false,
+                "focus": false,
+                "transparent": true
+            },
+            {
+            "fullscreen": false,
+            "resizable": false,
+            "title": "User Configuration",
+            "width": 700,
+            "height": 800,
+            "visible": true,
+            "hiddenTitle": false,
+            "decorations": false,
+            "focus": false,
+            "transparent": false,
+            "label": "local",
+            "url": "main.html"
+            }
+        ],
+    ```
+
+
+
+
+    I will try this: https://aptabase.com/blog/persistent-state-tauri-apps
+
+    https://github.com/tauri-apps/tauri-plugin-store
+
+    electron-store-config-repository.ts
+    config-repository.ts
+    user-config-options.ts
+    config-helpers.ts
+    object-helpers.ts
+
+    ```ts
+    import { Store } from "tauri-plugin-store-api";
+    import { emit } from '@tauri-apps/api/event'
+    import Channels from '../channels';
+
+    // Assuming the data structure is something like this
+    interface StoreData {
+    value: number;
+    // other properties if there are more
+    }
+
+    export default defineComponent({
+        setup() {
+            const store = new Store(".settings.dat");
+
+            const asyncFunction = async () => {
+                await store.set("some-key", { value: 13 });
+                const val = await store.get("some-key");
+                console.log(val);
+                store.save();
+            };
+            asyncFunction();
+
+            const asyncFunctionGet = async () => {
+            const val: StoreData | null = await store.get("some-key");
+            let value = val ? val["value"] : 0;
+            emit(Channels.getInstance().get("console_log_message"), {
+                theMessage:  `🦄 (3) store some-key: (${value})`,
+            })
+            };
+            asyncFunctionGet();
+        }
+    })
+    ```

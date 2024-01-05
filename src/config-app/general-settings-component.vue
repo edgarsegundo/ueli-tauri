@@ -2,7 +2,7 @@
 <div v-if="visible">
     <div class="settings__setting-title title is-3">
         <span>
-            {{ translations?.generalSettings }}
+            {{ appState.translations?.generalSettings }}
         </span>
         <div>
             <div class="dropdown is-right" :class="{ 'is-active' : dropdownVisible}">
@@ -17,27 +17,27 @@
                     <div class="dropdown-content">
                         <a href="#" class="dropdown-item" @click="importSettings">
                             <span class="icon"><i class="fa fa-file-import"></i></span>
-                            <span>{{ translations.generalSettingsImportSettings }}</span>
+                            <span>{{ appState.translations.generalSettingsImportSettings }}</span>
                         </a>
                         <a class="dropdown-item" @click="exportCurrentSettings">
                             <span class="icon"><i class="fa fa-file-export"></i></span>
-                            <span>{{ translations.generalSettingsExportSettings }}</span>
+                            <span>{{ appState.translations.generalSettingsExportSettings }}</span>
                         </a>
                         <a class="dropdown-item" @click="resetAllSettingsToDefault">
                             <span class="icon"><i class="fas fa-undo-alt"></i></span>
-                            <span>{{ translations.generalSettingsResetAllSettings }}</span>
+                            <span>{{ appState.translations.generalSettingsResetAllSettings }}</span>
                         </a>
                         <a class="dropdown-item" @click="clearExecutionLog">
                             <span class="icon"><i class="fas fa-trash"></i></span>
-                            <span>{{ translations.clearExecutionLog }}</span>
+                            <span>{{ appState.translations.clearExecutionLog }}</span>
                         </a>
                         <a class="dropdown-item" @click="openDebugLog">
                             <span class="icon"><i class="fas fa-bug"></i></span>
-                            <span>{{ translations.openDebugLog }}</span>
+                            <span>{{ appState.translations.openDebugLog }}</span>
                         </a>
                         <a class="dropdown-item" @click="openTempFolder">
                             <span class="icon"><i class="fas fa-folder"></i></span>
-                            <span>{{ translations.openTempFolder }}</span>
+                            <span>{{ appState.translations.openTempFolder }}</span>
                         </a>
                     </div>
                 </div>
@@ -55,12 +55,12 @@
             <div class="settings__options-container">
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsLanguage }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsLanguage }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <div class="select">
-                                    <select v-model="config.generalOptions.language" @change="updateConfig()">
+                                    <select v-model="appState.config.generalOptions.language" @change="updateConfig()">
                                         <option v-for="availableLanguage in availableLanguages" :key="availableLanguage">{{ availableLanguage }}</option>
                                     </select>
                                 </div>
@@ -70,11 +70,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsAutostartApp }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsAutostartApp }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="autoStartCheckbox" type="checkbox" name="autoStartCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.autostart" @change="updateConfig()">
+                                <input id="autoStartCheckbox" type="checkbox" name="autoStartCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.autostart" @change="updateConfig()">
                                 <label for="autoStartCheckbox"></label>
                             </div>
                         </div>
@@ -82,11 +82,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsShowTrayIcon }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsShowTrayIcon }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="showTrayIconCheckbox" type="checkbox" name="showTrayIconCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.showTrayIcon" @change="updateConfig()">
+                                <input id="showTrayIconCheckbox" type="checkbox" name="showTrayIconCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.showTrayIcon" @change="updateConfig()">
                                 <label for="showTrayIconCheckbox"></label>
                             </div>
                         </div>
@@ -94,11 +94,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsClearCachesOnExit }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsClearCachesOnExit }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="clearCachesOnExit" type="checkbox" name="clearCachesOnExit" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.clearCachesOnExit" @change="updateConfig()">
+                                <input id="clearCachesOnExit" type="checkbox" name="clearCachesOnExit" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.clearCachesOnExit" @change="updateConfig()">
                                 <label for="clearCachesOnExit"></label>
                             </div>
                         </div>
@@ -106,13 +106,13 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsHotKey }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsHotKey }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right">
                             <div class="control">
                                 <div class="select">
-                                    <select v-model="config.generalOptions.hotKey.modifier" @change="updateConfig()">
-                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.secondModifier)" :key="globalHotKeyModifier" :value="globalHotKeyModifier" >
+                                    <select v-model="appState.config.generalOptions.hotKey.modifier" @change="updateConfig()">
+                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != appState.config.generalOptions.hotKey.secondModifier)" :key="globalHotKeyModifier" :value="globalHotKeyModifier" >
                                             {{ getTranslatedGlobalHotKeyModifier(globalHotKeyModifier) }}
                                         </option>
                                     </select>
@@ -127,8 +127,8 @@
                             </div>
                             <div class="control">
                                 <div class="select">
-                                    <select v-model="config.generalOptions.hotKey.secondModifier" @change="updateConfig()">
-                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != config.generalOptions.hotKey.modifier)" :key="globalHotKeyModifier" :value="globalHotKeyModifier">
+                                    <select v-model="appState.config.generalOptions.hotKey.secondModifier" @change="updateConfig()">
+                                        <option v-for="globalHotKeyModifier in globalHotKeyModifiers.filter(key => key != appState.config.generalOptions.hotKey.modifier)" :key="globalHotKeyModifier" :value="globalHotKeyModifier">
                                             {{ getTranslatedGlobalHotKeyModifier(globalHotKeyModifier) }}
                                         </option>
                                     </select>
@@ -143,7 +143,7 @@
                             </div>
                             <div class="control">
                                 <div class="select">
-                                    <select v-model="config.generalOptions.hotKey.key" @change="updateConfig()">
+                                    <select v-model="appState.config.generalOptions.hotKey.key" @change="updateConfig()">
                                         <option v-for="globalHotKeyKey in globalHotKeyKeys" :key="globalHotKeyKey" :value="globalHotKeyKey">
                                             {{ getTranslatedGlobalHotKeyKey(globalHotKeyKey) }}
                                         </option>
@@ -155,23 +155,23 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsRescanIntervalEnabled }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsRescanIntervalEnabled }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input id="rescanEnabledCheckbox" type="checkbox" name="rescanEnabledCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.rescanEnabled" @change="updateConfig()">
+                                <input id="rescanEnabledCheckbox" type="checkbox" name="rescanEnabledCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.rescanEnabled" @change="updateConfig()">
                                 <label for="rescanEnabledCheckbox"></label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="settings__option" v-if="config.generalOptions.rescanEnabled">
-                    <div class="settings__option-name">{{ translations.generalSettingsRescanInterval }}</div>
+                <div class="settings__option" v-if="appState.config.generalOptions.rescanEnabled">
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsRescanInterval }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <input class="input" type="number" min="10" v-model="config.generalOptions.rescanIntervalInSeconds" @change="updateConfig()">
+                                <input class="input" type="number" min="10" v-model="appState.config.generalOptions.rescanIntervalInSeconds" @change="updateConfig()">
                             </div>
                         </div>
                     </div>
@@ -182,31 +182,31 @@
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="allowWindowMoveToggle" type="checkbox" name="allowWindowMoveToggle" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.allowWindowMove" @change="updateConfig()">
+                                <input id="allowWindowMoveToggle" type="checkbox" name="allowWindowMoveToggle" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.allowWindowMove" @change="updateConfig()">
                                 <label for="allowWindowMoveToggle"></label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="settings__option" v-if="config.generalOptions.allowWindowMove">
-                    <div class="settings__option-name">{{ translations.generalSettingsRememberWindowPosition }}</div>
+                <div class="settings__option" v-if="appState.config.generalOptions.allowWindowMove">
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsRememberWindowPosition }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="rememberWindowPositionCheckbox" type="checkbox" name="rememberWindowPositionCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.rememberWindowPosition" @change="updateConfig()">
+                                <input id="rememberWindowPositionCheckbox" type="checkbox" name="rememberWindowPositionCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.rememberWindowPosition" @change="updateConfig()">
                                 <label for="rememberWindowPositionCheckbox"></label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="settings__option" v-if="!config.generalOptions.rememberWindowPosition">
-                    <div class="settings__option-name">{{ translations.generalSettingsShowAlwaysOnPrimaryDisplay }}</div>
+                <div class="settings__option" v-if="!appState.config.generalOptions.rememberWindowPosition">
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsShowAlwaysOnPrimaryDisplay }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="showAlwaysOnPrimaryDisplayCheckbox" type="checkbox" name="showAlwaysOnPrimaryDisplayCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.showAlwaysOnPrimaryDisplay" @change="updateConfig()">
+                                <input id="showAlwaysOnPrimaryDisplayCheckbox" type="checkbox" name="showAlwaysOnPrimaryDisplayCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.showAlwaysOnPrimaryDisplay" @change="updateConfig()">
                                 <label for="showAlwaysOnPrimaryDisplayCheckbox"></label>
                             </div>
                         </div>
@@ -214,11 +214,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsLogExecution }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsLogExecution }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="logExecutionCheckbox" type="checkbox" name="logExecutionCheckbox" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.logExecution" @change="updateConfig()">
+                                <input id="logExecutionCheckbox" type="checkbox" name="logExecutionCheckbox" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.logExecution" @change="updateConfig()">
                                 <label for="logExecutionCheckbox"></label>
                             </div>
                         </div>
@@ -226,11 +226,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsPersistentUserInput }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsPersistentUserInput }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="persistentUserInput" type="checkbox" name="persistentUserInput" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.persistentUserInput" @change="updateConfig()">
+                                <input id="persistentUserInput" type="checkbox" name="persistentUserInput" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.persistentUserInput" @change="updateConfig()">
                                 <label for="persistentUserInput"></label>
                             </div>
                         </div>
@@ -238,11 +238,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsHideMainWindowAfterExecution }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsHideMainWindowAfterExecution }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="hideMainWindowAfterExecution" type="checkbox" name="hideMainWindowAfterExecution" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.hideMainWindowAfterExecution" @change="updateConfig()">
+                                <input id="hideMainWindowAfterExecution" type="checkbox" name="hideMainWindowAfterExecution" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.hideMainWindowAfterExecution" @change="updateConfig()">
                                 <label for="hideMainWindowAfterExecution"></label>
                             </div>
                         </div>
@@ -250,11 +250,11 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsHideMainWindowOnBlur }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsHideMainWindowOnBlur }}</div>
                     <div class="settings__option-content">
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
-                                <input id="hideMainWindowOnBlur" type="checkbox" name="hideMainWindowOnBlur" class="switch is-rounded is-success" checked="checked" v-model="config.generalOptions.hideMainWindowOnBlur" @change="updateConfig()">
+                                <input id="hideMainWindowOnBlur" type="checkbox" name="hideMainWindowOnBlur" class="switch is-rounded is-success" checked="checked" v-model="appState.config.generalOptions.hideMainWindowOnBlur" @change="updateConfig()">
                                 <label for="hideMainWindowOnBlur"></label>
                             </div>
                         </div>
@@ -262,16 +262,16 @@
                 </div>
 
                 <div class="settings__option">
-                    <div class="settings__option-name">{{ translations.generalSettingsDecimalSeparator }}</div>
+                    <div class="settings__option-name">{{ appState.translations.generalSettingsDecimalSeparator }}</div>
                     <div class="settings__option-content">
                         <div class="field is-grouped is-grouped-right">
                             <div class="buttons has-addons">
                                 <button class="button"
-                                    :class="{ 'is-success': config.generalOptions.decimalSeparator == '.' }"
-                                    @click="config.generalOptions.decimalSeparator = '.'; updateConfig();">.</button>
+                                    :class="{ 'is-success': appState.config.generalOptions.decimalSeparator == '.' }"
+                                    @click="appState.config.generalOptions.decimalSeparator = '.'; updateConfig();">.</button>
                                 <button class="button"
-                                    :class="{ 'is-success': config.generalOptions.decimalSeparator == ',' }"
-                                    @click="config.generalOptions.decimalSeparator = ','; updateConfig();">,</button>
+                                    :class="{ 'is-success': appState.config.generalOptions.decimalSeparator == ',' }"
+                                    @click="appState.config.generalOptions.decimalSeparator = ','; updateConfig();">,</button>
                             </div>
                         </div>
                     </div>
@@ -283,19 +283,19 @@
                         <div class="field has-addons has-addons-right vertical-center">
                             <div class="control">
                                 <button class="button" v-if="updateStatus.checking" disabled>
-                                    {{ translations.generalSettingsCheckingForUpdate }}...
+                                    {{ appState.translations.generalSettingsCheckingForUpdate }}...
                                 </button>
                                 <button class="button" :disabled="appIsInDevelopment" v-if="updateStatus.updateAvailable" @click="downloadUpdate">
-                                    {{ translations.generalSettingsDownloadUpdate }}
+                                    {{ appState.translations.generalSettingsDownloadUpdate }}
                                 </button>
                                 <button class="button" disabled v-if="updateStatus.downloading">
-                                    {{ translations.generalSettingsDownloadingUpdate }}...
+                                    {{ appState.translations.generalSettingsDownloadingUpdate }}...
                                 </button>
                                 <button class="button" v-if="updateStatus.latestVersionRunning" disabled>
-                                    {{ translations.generalSettingsLatestVersion }}
+                                    {{ appState.translations.generalSettingsLatestVersion }}
                                 </button>
                                 <button class="button" v-if="updateStatus.errorOnUpdateCheck" disabled>
-                                    {{ translations.generalSettingsErrorWhileCheckingForUpdate }}
+                                    {{ appState.translations.generalSettingsErrorWhileCheckingForUpdate }}
                                 </button>
                             </div>
                         </div>
@@ -351,14 +351,14 @@
 import { defineComponent, ref, computed, inject, // inject, ref, computed, onMounted, onUnmounted, defineProps, defineEmits, 
 } from 'vue';
 import { deepCopy } from '../common/helpers/object-helpers';
-import { TranslationSet } from '../common/translation/translation-set';
+// import { TranslationSet } from '../common/translation/translation-set';
 import { Language } from "../common/translation/language";
 import { GlobalHotKeyModifier } from "../common/global-hot-key/global-hot-key-modifier";
 import { GlobalHotKeyKey } from "../common/global-hot-key/global-hot-key-key";
 import { emit, listen } from '@tauri-apps/api/event'
 import Channels from '../channels';
 import { UserConfirmationDialogParams, UserConfirmationDialogType } from './modals/user-confirmation-dialog-params';
-import { UserConfigOptions } from '../common/config/user-config-options';
+// import { UserConfigOptions } from '../common/config/user-config-options';
 
 import { registerCallback } from '../callback-mgr';
 import { GeneralSettings } from './general-settings';
@@ -415,25 +415,28 @@ const settingName = ref(GeneralSettings.General);
 export default defineComponent({
     name: 'general-settings',
     setup() {
-        const config:UserConfigOptions = inject(/* key */ 'config');
-        const translations:TranslationSet = inject(/* key */ 'translations');
+        const appState:any = inject(/* key */ 'appState');
+        // const config:UserConfigOptions = reactiveAppState.config;
+        // const translations:TranslationSet = reactiveAppState.translations;
+
+        // alert(appState.appState.config.generalOptions.language)
 
         const getTranslatedGlobalHotKeyModifier = (hotkeyModifier: GlobalHotKeyModifier): string => {
             switch (hotkeyModifier) {
                 case GlobalHotKeyModifier.Alt:
-                    return translations.hotkeyModifierAlt;
+                    return appState.translations.hotkeyModifierAlt;
                 case GlobalHotKeyModifier.AltGr:
-                    return translations.hotkeyModifierAltGr;
+                    return appState.translations.hotkeyModifierAltGr;
                 case GlobalHotKeyModifier.Command:
-                    return translations.hotkeyModifierCommand;
+                    return appState.translations.hotkeyModifierCommand;
                 case GlobalHotKeyModifier.Control:
-                    return translations.hotkeyModifierControl;
+                    return appState.translations.hotkeyModifierControl;
                 case GlobalHotKeyModifier.Option:
-                    return translations.hotkeyModifierOption;
+                    return appState.translations.hotkeyModifierOption;
                 case GlobalHotKeyModifier.Shift:
-                    return translations.hotkeyModifierShift;
+                    return appState.translations.hotkeyModifierShift;
                 case GlobalHotKeyModifier.Super:
-                    return translations.hotkeyModifierSuper;
+                    return appState.translations.hotkeyModifierSuper;
                 default:
                     return hotkeyModifier;
             }
@@ -442,50 +445,55 @@ export default defineComponent({
         const getTranslatedGlobalHotKeyKey = (hotkeyKey: GlobalHotKeyKey): string => {
             switch (hotkeyKey) {
                 case GlobalHotKeyKey.Backspace:
-                    return translations.hotkeyKeyBackspace;
+                    return appState.translations.hotkeyKeyBackspace;
                 case GlobalHotKeyKey.Delete:
-                    return translations.hotkeyKeyDelete;
+                    return appState.translations.hotkeyKeyDelete;
                 case GlobalHotKeyKey.Down:
-                    return translations.hotkeyKeyDown;
+                    return appState.translations.hotkeyKeyDown;
                 case GlobalHotKeyKey.End:
-                    return translations.hotkeyKeyEnd;
+                    return appState.translations.hotkeyKeyEnd;
                 case GlobalHotKeyKey.Escape:
-                    return translations.hotkeyKeyEscape;
+                    return appState.translations.hotkeyKeyEscape;
                 case GlobalHotKeyKey.Home:
-                    return translations.hotkeyKeyHome;
+                    return appState.translations.hotkeyKeyHome;
                 case GlobalHotKeyKey.Insert:
-                    return translations.hotkeyKeyInsert;
+                    return appState.translations.hotkeyKeyInsert;
                 case GlobalHotKeyKey.Left:
-                    return translations.hotkeyKeyLeft;
+                    return appState.translations.hotkeyKeyLeft;
                 case GlobalHotKeyKey.PageDown:
-                    return translations.hotkeyKeyPageDown;
+                    return appState.translations.hotkeyKeyPageDown;
                 case GlobalHotKeyKey.PageUp:
-                    return translations.hotkeyKeyPageUp;
+                    return appState.translations.hotkeyKeyPageUp;
                 case GlobalHotKeyKey.Plus:
-                    return translations.hotkeyKeyPlus;
+                    return appState.translations.hotkeyKeyPlus;
                 case GlobalHotKeyKey.Return:
-                    return translations.hotkeyKeyReturn;
+                    return appState.translations.hotkeyKeyReturn;
                 case GlobalHotKeyKey.Right:
-                    return translations.hotkeyKeyRight;
+                    return appState.translations.hotkeyKeyRight;
                 case GlobalHotKeyKey.Space:
-                    return translations.hotkeyKeySpace;
+                    return appState.translations.hotkeyKeySpace;
                 case GlobalHotKeyKey.Tab:
-                    return translations.hotkeyKeyTab;
+                    return appState.translations.hotkeyKeyTab;
                 case GlobalHotKeyKey.Up:
-                    return translations.hotkeyKeyUp;
+                    return appState.translations.hotkeyKeyUp;
                 default:
                     return hotkeyKey;
             }
         }
 
         const updateConfig = (needsIndexRefresh?: boolean) => {
-            if (config.generalOptions.rememberWindowPosition) {
-                config.generalOptions.showAlwaysOnPrimaryDisplay = false;
+            if (appState.config.generalOptions.rememberWindowPosition) {
+                appState.config.generalOptions.showAlwaysOnPrimaryDisplay = false;
             }
-            if (config.generalOptions.rescanIntervalInSeconds < 10) {
-                config.generalOptions.rescanIntervalInSeconds = 10;
+            if (appState.config.generalOptions.rescanIntervalInSeconds < 10) {
+                appState.config.generalOptions.rescanIntervalInSeconds = 10;
             }
-            console.log(needsIndexRefresh);
+            // console.log(needsIndexRefresh);
+
+            emit(Channels.getInstance().get("configUpdated"), {
+                needsIndexRefresh: needsIndexRefresh,
+                LanguageSelected: appState.config.generalOptions.language
+            });
             // vueEventDispatcher.$emit(VueEventChannels.configUpdated, this.config, needsIndexRefresh);
         }
 
@@ -497,8 +505,8 @@ export default defineComponent({
                     // vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
                     }     
                 ),
-                message: translations.generalSettingsClearExecutionLogWarning,
-                modalTitle: translations.clearExecutionLog,
+                message: appState.translations.generalSettingsClearExecutionLogWarning,
+                modalTitle: appState.translations.clearExecutionLog,
                 type: UserConfirmationDialogType.Default,
             };
             // vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -520,8 +528,8 @@ export default defineComponent({
         //         callback: () => {
         //             vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
         //         },
-        //         message: translations.generalSettingsClearExecutionLogWarning,
-        //         modalTitle: translations.clearExecutionLog,
+        //         message: appState.translations.generalSettingsClearExecutionLogWarning,
+        //         modalTitle: appState.translations.clearExecutionLog,
         //         type: UserConfirmationDialogType.Default,
         //     };
         //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -531,8 +539,8 @@ export default defineComponent({
         return {
             clearExecutionLog,
             visible,
-            translations,
-            config,
+            // translations,
+            // config,
             dropdownVisible,
             availableLanguages: Object.values(Language).map((language) => language),
             globalHotKeyModifiers,
@@ -542,7 +550,8 @@ export default defineComponent({
             dropdownTrigger,
             getTranslatedGlobalHotKeyModifier,
             getTranslatedGlobalHotKeyKey,
-            updateConfig
+            updateConfig,
+            appState
             // clearExecutionLog
         };
     },
@@ -587,8 +596,8 @@ export default defineComponent({
         //         callback: () => {
         //             vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
         //         },
-        //         message: translations.generalSettingsClearExecutionLogWarning,
-        //         modalTitle: translations.clearExecutionLog,
+        //         message: appState.translations.generalSettingsClearExecutionLogWarning,
+        //         modalTitle: appState.translations.clearExecutionLog,
         //         type: UserConfirmationDialogType.Default,
         //     };
         //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -601,12 +610,12 @@ export default defineComponent({
         //         .then((filePath: string) => {
         //             const config: UserConfigOptions = this.config;
         //             const translations: TranslationSet = this.translations;
-        //             const settingsFilePath = join(filePath, "ueli.config.json");
+        //             const settingsFilePath = join(filePath, "ueli.appState.config.json");
         //             FileHelpers.writeFile(settingsFilePath, JSON.stringify(config, undefined, 2))
         //                 .then(() =>
         //                     vueEventDispatcher.$emit(
         //                         VueEventChannels.notification,
-        //                         translations.generalSettingsSuccessfullyExportedSettings,
+        //                         appState.translations.generalSettingsSuccessfullyExportedSettings,
         //                         NotificationType.Info,
         //                     ),
         //                 )
@@ -628,7 +637,7 @@ export default defineComponent({
         //     const translations: TranslationSet = this.translations;
         //     const filter: Electron.FileFilter = {
         //         extensions: ["json"],
-        //         name: translations.generalSettingsImportFileFilterJsonFiles,
+        //         name: appState.translations.generalSettingsImportFileFilterJsonFiles,
         //     };
         //     getFilePath([filter])
         //         .then((filePath) => {
@@ -645,7 +654,7 @@ export default defineComponent({
         //                     } else {
         //                         vueEventDispatcher.$emit(
         //                             VueEventChannels.notification,
-        //                             translations.generalSettingsImportErrorInvalidConfig,
+        //                             appState.translations.generalSettingsImportErrorInvalidConfig,
         //                             NotificationType.Error,
         //                         );
         //                     }
@@ -670,11 +679,11 @@ export default defineComponent({
         //     const userConfirmationDialogParams: UserConfirmationDialogParams = {
         //         callback: () => {
         //             const config: UserConfigOptions = this.config;
-        //             config.generalOptions = deepCopy(defaultGeneralOptions);
+        //             appState.config.generalOptions = deepCopy(defaultGeneralOptions);
         //             this.updateConfig();
         //         },
-        //         message: translations.generalSettingsResetWarning,
-        //         modalTitle: translations.resetToDefault,
+        //         message: appState.translations.generalSettingsResetWarning,
+        //         modalTitle: appState.translations.resetToDefault,
         //         type: UserConfirmationDialogType.Default,
         //     };
         //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -687,19 +696,19 @@ export default defineComponent({
         //             this.updateConfig(true);
         //             this.dropdownVisible = false;
         //         },
-        //         message: translations.generalSettingsResetAllSettingsWarning,
-        //         modalTitle: translations.resetToDefault,
+        //         message: appState.translations.generalSettingsResetAllSettingsWarning,
+        //         modalTitle: appState.translations.resetToDefault,
         //         type: UserConfirmationDialogType.Error,
         //     };
         //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
         // },
         // updateConfig(needsIndexRefresh?: boolean) {
         //     const config: UserConfigOptions = this.config;
-        //     if (config.generalOptions.rememberWindowPosition) {
-        //         config.generalOptions.showAlwaysOnPrimaryDisplay = false;
+        //     if (appState.config.generalOptions.rememberWindowPosition) {
+        //         appState.config.generalOptions.showAlwaysOnPrimaryDisplay = false;
         //     }
-        //     if (config.generalOptions.rescanIntervalInSeconds < 10) {
-        //         config.generalOptions.rescanIntervalInSeconds = 10;
+        //     if (appState.config.generalOptions.rescanIntervalInSeconds < 10) {
+        //         appState.config.generalOptions.rescanIntervalInSeconds = 10;
         //     }
         //     vueEventDispatcher.$emit(VueEventChannels.configUpdated, this.config, needsIndexRefresh);
         // },
@@ -773,8 +782,8 @@ export default defineComponent({
 //         callback: () => {
 //             vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
 //         },
-//         message: translations.generalSettingsClearExecutionLogWarning,
-//         modalTitle: translations.clearExecutionLog,
+//         message: appState.translations.generalSettingsClearExecutionLogWarning,
+//         modalTitle: appState.translations.clearExecutionLog,
 //         type: UserConfirmationDialogType.Default,
 //     };
 //     vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -852,8 +861,8 @@ export default defineComponent({
 //                 callback: () => {
 //                     vueEventDispatcher.$emit(VueEventChannels.clearExecutionLogConfirmed);
 //                 },
-//                 message: translations.generalSettingsClearExecutionLogWarning,
-//                 modalTitle: translations.clearExecutionLog,
+//                 message: appState.translations.generalSettingsClearExecutionLogWarning,
+//                 modalTitle: appState.translations.clearExecutionLog,
 //                 type: UserConfirmationDialogType.Default,
 //             };
 //             vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -866,12 +875,12 @@ export default defineComponent({
 //                 .then((filePath: string) => {
 //                     const config: UserConfigOptions = this.config;
 //                     const translations: TranslationSet = this.translations;
-//                     const settingsFilePath = join(filePath, "ueli.config.json");
+//                     const settingsFilePath = join(filePath, "ueli.appState.config.json");
 //                     FileHelpers.writeFile(settingsFilePath, JSON.stringify(config, undefined, 2))
 //                         .then(() =>
 //                             vueEventDispatcher.$emit(
 //                                 VueEventChannels.notification,
-//                                 translations.generalSettingsSuccessfullyExportedSettings,
+//                                 appState.translations.generalSettingsSuccessfullyExportedSettings,
 //                                 NotificationType.Info,
 //                             ),
 //                         )
@@ -887,19 +896,19 @@ export default defineComponent({
 //             const translations: TranslationSet = this.translations;
 //             switch (hotkeyModifier) {
 //                 case GlobalHotKeyModifier.Alt:
-//                     return translations.hotkeyModifierAlt;
+//                     return appState.translations.hotkeyModifierAlt;
 //                 case GlobalHotKeyModifier.AltGr:
-//                     return translations.hotkeyModifierAltGr;
+//                     return appState.translations.hotkeyModifierAltGr;
 //                 case GlobalHotKeyModifier.Command:
-//                     return translations.hotkeyModifierCommand;
+//                     return appState.translations.hotkeyModifierCommand;
 //                 case GlobalHotKeyModifier.Control:
-//                     return translations.hotkeyModifierControl;
+//                     return appState.translations.hotkeyModifierControl;
 //                 case GlobalHotKeyModifier.Option:
-//                     return translations.hotkeyModifierOption;
+//                     return appState.translations.hotkeyModifierOption;
 //                 case GlobalHotKeyModifier.Shift:
-//                     return translations.hotkeyModifierShift;
+//                     return appState.translations.hotkeyModifierShift;
 //                 case GlobalHotKeyModifier.Super:
-//                     return translations.hotkeyModifierSuper;
+//                     return appState.translations.hotkeyModifierSuper;
 //                 default:
 //                     return hotkeyModifier;
 //             }
@@ -908,37 +917,37 @@ export default defineComponent({
 //             const translations: TranslationSet = this.translations;
 //             switch (hotkeyKey) {
 //                 case GlobalHotKeyKey.Backspace:
-//                     return translations.hotkeyKeyBackspace;
+//                     return appState.translations.hotkeyKeyBackspace;
 //                 case GlobalHotKeyKey.Delete:
-//                     return translations.hotkeyKeyDelete;
+//                     return appState.translations.hotkeyKeyDelete;
 //                 case GlobalHotKeyKey.Down:
-//                     return translations.hotkeyKeyDown;
+//                     return appState.translations.hotkeyKeyDown;
 //                 case GlobalHotKeyKey.End:
-//                     return translations.hotkeyKeyEnd;
+//                     return appState.translations.hotkeyKeyEnd;
 //                 case GlobalHotKeyKey.Escape:
-//                     return translations.hotkeyKeyEscape;
+//                     return appState.translations.hotkeyKeyEscape;
 //                 case GlobalHotKeyKey.Home:
-//                     return translations.hotkeyKeyHome;
+//                     return appState.translations.hotkeyKeyHome;
 //                 case GlobalHotKeyKey.Insert:
-//                     return translations.hotkeyKeyInsert;
+//                     return appState.translations.hotkeyKeyInsert;
 //                 case GlobalHotKeyKey.Left:
-//                     return translations.hotkeyKeyLeft;
+//                     return appState.translations.hotkeyKeyLeft;
 //                 case GlobalHotKeyKey.PageDown:
-//                     return translations.hotkeyKeyPageDown;
+//                     return appState.translations.hotkeyKeyPageDown;
 //                 case GlobalHotKeyKey.PageUp:
-//                     return translations.hotkeyKeyPageUp;
+//                     return appState.translations.hotkeyKeyPageUp;
 //                 case GlobalHotKeyKey.Plus:
-//                     return translations.hotkeyKeyPlus;
+//                     return appState.translations.hotkeyKeyPlus;
 //                 case GlobalHotKeyKey.Return:
-//                     return translations.hotkeyKeyReturn;
+//                     return appState.translations.hotkeyKeyReturn;
 //                 case GlobalHotKeyKey.Right:
-//                     return translations.hotkeyKeyRight;
+//                     return appState.translations.hotkeyKeyRight;
 //                 case GlobalHotKeyKey.Space:
-//                     return translations.hotkeyKeySpace;
+//                     return appState.translations.hotkeyKeySpace;
 //                 case GlobalHotKeyKey.Tab:
-//                     return translations.hotkeyKeyTab;
+//                     return appState.translations.hotkeyKeyTab;
 //                 case GlobalHotKeyKey.Up:
-//                     return translations.hotkeyKeyUp;
+//                     return appState.translations.hotkeyKeyUp;
 //                 default:
 //                     return hotkeyKey;
 //             }
@@ -947,7 +956,7 @@ export default defineComponent({
 //             const translations: TranslationSet = this.translations;
 //             const filter: Electron.FileFilter = {
 //                 extensions: ["json"],
-//                 name: translations.generalSettingsImportFileFilterJsonFiles,
+//                 name: appState.translations.generalSettingsImportFileFilterJsonFiles,
 //             };
 //             getFilePath([filter])
 //                 .then((filePath) => {
@@ -964,7 +973,7 @@ export default defineComponent({
 //                             } else {
 //                                 vueEventDispatcher.$emit(
 //                                     VueEventChannels.notification,
-//                                     translations.generalSettingsImportErrorInvalidConfig,
+//                                     appState.translations.generalSettingsImportErrorInvalidConfig,
 //                                     NotificationType.Error,
 //                                 );
 //                             }
@@ -989,11 +998,11 @@ export default defineComponent({
 //             const userConfirmationDialogParams: UserConfirmationDialogParams = {
 //                 callback: () => {
 //                     const config: UserConfigOptions = this.config;
-//                     config.generalOptions = deepCopy(defaultGeneralOptions);
+//                     appState.config.generalOptions = deepCopy(defaultGeneralOptions);
 //                     this.updateConfig();
 //                 },
-//                 message: translations.generalSettingsResetWarning,
-//                 modalTitle: translations.resetToDefault,
+//                 message: appState.translations.generalSettingsResetWarning,
+//                 modalTitle: appState.translations.resetToDefault,
 //                 type: UserConfirmationDialogType.Default,
 //             };
 //             vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
@@ -1006,19 +1015,19 @@ export default defineComponent({
 //                     this.updateConfig(true);
 //                     this.dropdownVisible = false;
 //                 },
-//                 message: translations.generalSettingsResetAllSettingsWarning,
-//                 modalTitle: translations.resetToDefault,
+//                 message: appState.translations.generalSettingsResetAllSettingsWarning,
+//                 modalTitle: appState.translations.resetToDefault,
 //                 type: UserConfirmationDialogType.Error,
 //             };
 //             vueEventDispatcher.$emit(VueEventChannels.settingsConfirmation, userConfirmationDialogParams);
 //         },
 //         updateConfig(needsIndexRefresh?: boolean) {
 //             const config: UserConfigOptions = this.config;
-//             if (config.generalOptions.rememberWindowPosition) {
-//                 config.generalOptions.showAlwaysOnPrimaryDisplay = false;
+//             if (appState.config.generalOptions.rememberWindowPosition) {
+//                 appState.config.generalOptions.showAlwaysOnPrimaryDisplay = false;
 //             }
-//             if (config.generalOptions.rescanIntervalInSeconds < 10) {
-//                 config.generalOptions.rescanIntervalInSeconds = 10;
+//             if (appState.config.generalOptions.rescanIntervalInSeconds < 10) {
+//                 appState.config.generalOptions.rescanIntervalInSeconds = 10;
 //             }
 //             vueEventDispatcher.$emit(VueEventChannels.configUpdated, this.config, needsIndexRefresh);
 //         },
