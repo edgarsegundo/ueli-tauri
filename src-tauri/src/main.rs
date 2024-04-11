@@ -7,6 +7,8 @@ use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu
 use tauri_plugin_positioner::{Position, WindowExt};
 use tauri_plugin_store::StoreBuilder;
 
+use notify_rust::Notification;
+use notify_rust::Timeout;
 
 // use tauri_plugin_store::PluginBuilder;
 
@@ -67,10 +69,13 @@ fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit").accelerator("Cmd+Q");
     let hide = CustomMenuItem::new("hide".to_string(), "Hide").accelerator("Cmd+H");
 
+    let test = CustomMenuItem::new("test".to_string(), "Test").accelerator("Cmd+N");
+
     let system_tray_menu = SystemTrayMenu::new()
         .add_item(show)
         .add_item(config)
         .add_item(hide)
+        .add_item(test)
         .add_item(quit);
 
     println!("****** OS = {}", env::consts::OS); // Prints the current OS.
@@ -230,13 +235,22 @@ fn main() {
         
                         // window.emit(&channels::get_channel("tray_menu_item_selected"), Payload { message: "config".into() }).unwrap();                        
                     }
-
                     "quit" => {
                         std::process::exit(0);
                     }
                     "hide" => {
                         let window = app.get_window("main").unwrap();
                         window.hide().unwrap();
+                    }
+                    "test" => {
+                        // https://docs.rs/notify-rust/latest/notify_rust/
+                        Notification::new()
+                            .summary("Hello")
+                            .body("This is a test notification")
+                            .icon("firefox")
+                            .timeout(Timeout::Milliseconds(1000 * 30)) // milliseconds
+                            .show()
+                            .unwrap();
                     }
                     _ => {}
                 },

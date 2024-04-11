@@ -4058,6 +4058,7 @@ name = "ueli-tauri"
 version = "0.0.0"
 dependencies = [
  "lazy_static",
+ "notify-rust",
  "serde",
  "serde_json",
  "tauri",
